@@ -1,1 +1,6 @@
 data/
+contests/
+lib/
+.*rc
+*.tmpl
+TODO.md

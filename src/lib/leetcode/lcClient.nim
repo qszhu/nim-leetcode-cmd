@@ -44,8 +44,6 @@ import requests/[
   submissionList,
 ]
 
-import jwts
-
 export asyncdispatch, json
 
 
@@ -73,8 +71,8 @@ proc newLcClient*(host = HOST, proxyUrl = ""): LcClient =
     "Content-Type": "application/json"
   })
 
-proc setToken*(self: LcClient, token: JsonWebToken) =
-  self.token = $token
+proc setToken*(self: LcClient, token: string) =
+  self.token = token
 
 proc setSessionCookie(self: LcClient) =
   doAssert self.token.len > 0
@@ -258,7 +256,9 @@ proc timestamp*(self: LcClient): Future[JsonNode] {.async.} =
 
 proc contestInfo*(self: LcClient,
   contestSlug: string,
+  login = true,
 ): Future[JsonNode] {.async.} =
+  if login: self.setSessionCookie
   let url = self.host / "contest" / "api" / "info" / (contestSlug & "/")
   let res = await self.client.request(url, httpMethod = HttpGet)
   let respBody = await res.body
