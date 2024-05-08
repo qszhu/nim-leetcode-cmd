@@ -1,10 +1,16 @@
-import ../../lib/leetcode/[lcClient, utils]
+import std/[
+  algorithm,
+  json,
+  sequtils,
+  tables,
+]
+
+import ../../lib/leetcode/lcClient
 import ../../nlccrcs
 import ../../projects/projects
+import ../../consts
 
 
-
-import std/[json, sequtils, tables]
 
 type
   ContestInfo = object
@@ -45,21 +51,29 @@ proc initCodeSnippets(jso: JsonNode): CodeSnippets =
 
 proc initProject(info: ProjectInfo): BaseProject =
   case info.lang
-  of "nim":
-    initNimProject(info)
+  of LANG_NIM_JS:
+    initNimJsProject(info)
   else:
     raise newException(ValueError, "Unsupported language: " & info.lang)
 
-proc start*(contestSlugOrUrl: string): bool =
-  let contestSlug = getContestSlug(contestSlugOrUrl)
+proc getQuestionCodeSnippets(client: LcClient, titleSlug: string): Future[CodeSnippets] {.async.} =
+  let res = await client.questionEditorData(titleSlug)
+  initCodeSnippets(res["data"]["question"]["codeSnippets"])
 
+proc getQuestionTestCasesAndMeta(client: LcClient, titleSlug: string): Future[(string, JsonNode)] {.async.} =
+  let res = await client.consolePanelConfig(titleSlug)
+  let testInput = res["data"]["question"]["exampleTestcases"].getStr
+  let metaData = res["data"]["question"]["metaData"].getStr.parseJson
+  (testInput, metaData)
+
+proc startCmd*(contestSlug: string): bool =
   let client = newLcClient()
   client.setToken(nlccrc.getLeetCodeSession)
 
   let info = waitFor client.contestInfo(contestSlug)
 
   let contestInfo = initContestInfo(info["contest"])
-  let questions = info["questions"].mapIt(it.initQuestionInfo)
+  let questions = info["questions"].mapIt(it.initQuestionInfo).sortedByIt(it.credit)
 
   let registered = info["registered"].getBool
   if not contestInfo.isVirtual and not registered:
@@ -69,13 +83,8 @@ proc start*(contestSlugOrUrl: string): bool =
   let lang = nlccrc.getLanguage
 
   for q in questions:
-    var res = waitFor client.questionEditorData(q.titleSlug)
-    let snippets = initCodeSnippets(res["data"]["question"]["codeSnippets"])
-
-    res = waitFor client.consolePanelConfig(q.titleSlug)
-    let testInput = res["data"]["question"]["exampleTestcases"].getStr
-    let metaData = res["data"]["question"]["metaData"].getStr
-
+    let snippets = waitFor client.getQuestionCodeSnippets(q.titleSlug)
+    let (testInput, metaData) = waitFor client.getQuestionTestCasesAndMeta(q.titleSlug)
     let proj = initProject(ProjectInfo(
       contestSlug: contestSlug,
       titleSlug: q.titleSlug,
@@ -86,5 +95,8 @@ proc start*(contestSlugOrUrl: string): bool =
       metaData: metaData,
     ))
     proj.initProjectDir
+
+  nlccrc.setContestQuestions(questions.mapIt(it.titleSlug))
+  nlccrc.setCurrentQuestion(0)
 
   return true

@@ -1,4 +1,4 @@
 import baseProject
-import nimProject
+import nimJsProject
 
-export baseProject, nimProject
+export baseProject, nimJsProject

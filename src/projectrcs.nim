@@ -8,8 +8,6 @@ import lib/rcs
 
 const CFG_FN = ".projectrc"
 
-const KEY_CONTEST = "contest"
-const KEY_QUESTION = "question"
 const KEY_QUESTION_ID = "questionId"
 const KEY_CURRENT_SRC = "currentSrc"
 
@@ -20,18 +18,6 @@ type
 
 proc initProjectRC*(dir: string): ProjectRC {.inline.} =
   initRunConfig(dir / CFG_FN)
-
-proc setContestSlug*(self: ProjectRC, v: string) {.inline.} =
-  self.set(KEY_CONTEST, v)
-
-proc getContestSlug*(self: ProjectRC): string {.inline.} =
-  self.get(KEY_CONTEST)
-
-proc setQuestionSlug*(self: ProjectRC, v: string) {.inline.} =
-  self.set(KEY_QUESTION, v)
-
-proc getQuestionSlug*(self: ProjectRC): string {.inline.} =
-  self.get(KEY_QUESTION)
 
 proc setQuestionId*(self: ProjectRC, v: string) {.inline.} =
   self.set(KEY_QUESTION_ID, v)

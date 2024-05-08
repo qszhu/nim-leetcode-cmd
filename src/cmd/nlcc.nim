@@ -19,14 +19,19 @@ import std/[
 import ../lib/[args, prompts]
 import ../lib/leetcode/lcSession
 import ../nlccrcs
+import ../consts
+import ../projects/projects
+import ../utils
 import consts
-import subcmd/[start, sync]
+import subcmd/[start, sync, build, test, submit]
 
 
 
 const SESSION_EXPIRE_WARNING_SECS = 3 * 24 * 60 * 60
 
 proc showHelp(): int = discard
+proc initCurrentProject(): BaseProject
+proc openCurrent(): bool
 
 proc sync0(): bool =
   let args = initArgs()
@@ -44,7 +49,7 @@ proc sync0(): bool =
     let default = if browser.toLowerAscii == "chrome": getDefaultChromeProfilePath() else: ""
     if not prompt("Browser profile path", profilePath, default): return
 
-  if not sync(browser, profilePath): return
+  if not syncCmd(browser, profilePath): return
 
   nlccrc.setBrowser(browser)
   nlccrc.setBrowserProfilePath(profilePath)
@@ -54,18 +59,82 @@ proc sync0(): bool =
 proc start0(): bool =
   let args = initArgs().parse
 
-  var contestSlugOrUrl = args.getArg(1)
-  if contestSlugOrUrl.len == 0:
-    contestSlugOrUrl = nlccrc.getCurrentContest
-  if contestSlugOrUrl.len == 0:
-    if not prompt("Contest slug or url", contestSlugOrUrl): return
+  var contestSlug = args.getArg(1).getContestSlug
+  if contestSlug.len == 0:
+    contestSlug = nlccrc.getCurrentContest
+  if contestSlug.len == 0:
+    if not prompt("Contest slug or url", contestSlug): return
 
-  if start(contestSlugOrUrl):
-    nlccrc.setCurrentContest(contestSlugOrUrl)
+  if startCmd(contestSlug):
+    nlccrc.setCurrentContest(contestSlug)
+
+  openCurrent()
+
+proc build0(): bool =
+  let proj = initCurrentProject()
+  buildCmd(proj)
+
+proc test0(): bool =
+  let proj = initCurrentProject()
+  testCmd(proj)
+
+proc next0(): bool =
+  let questions = nlccrc.getContestQuestions
+  let cur = nlccrc.getCurrentQuestion
+  let next = (cur + 1) mod questions.len
+  nlccrc.setCurrentQuestion(next)
+
+  openCurrent()
+
+proc submit0(): bool =
+  let proj = initCurrentProject()
+  if not submitCmd(proj): return
+
+  next0()
+
+proc select0(): bool =
+  let args = initArgs().parse
+
+  let questions = nlccrc.getContestQuestions
+  var num = args.getArg(1)
+  if num.len == 0:
+    if not prompt(&"Question no [1..{questions.len}]:", num): return
+
+  let n = num.parseInt - 1
+  if n notin 0 ..< questions.len: return
+
+  nlccrc.setCurrentQuestion(n)
+
+  openCurrent()
+
+proc initCurrentProject(): BaseProject =
+  let contestSlug = nlccrc.getCurrentContest
+  let questionSlug = nlccrc.getContestQuestions[nlccrc.getCurrentQuestion]
+  let lang = nlccrc.getLanguage
+  case lang
+  of LANG_NIM_JS:
+    let proj = NimJsProject.new
+    proj.initFromProject(contestSlug, questionSlug, lang)
+    return proj
+  else:
+    raise newException(ValueError, "Unsupported language: " & lang)
+
+proc openCurrent(): bool =
+  let proj = initCurrentProject()
+  proj.openInEditor
+
+  let browser = nlccrc.getBrowser
+  openUrlInBrowser(browser, getQuestionUrl(proj.contestSlug, proj.questionSlug))
 
   true
 
 proc check(): bool =
+  if nlccrc.getEditorCmd.len == 0:
+    nlccrc.setEditorCmd(&"code {TMPL_VAR_SOLUTION_SRC}")
+
+  if nlccrc.getDiffCmd.len == 0:
+    nlccrc.setDiffCmd(&"code --diff {TMPL_VAR_DIFF_A} {TMPL_VAR_DIFF_B}")
+
   var session = nlccrc.getLeetCodeSession
   if session.len == 0:
     if not sync0(): return
@@ -93,8 +162,18 @@ proc main(): int =
     if not sync0(): return -1
   of CMD_START:
     if not start0(): return -1
+  of CMD_BUILD:
+    if not build0(): return -1
+  of CMD_TEST:
+    if not test0(): return -1
+  of CMD_SUBMIT:
+    if not submit0(): return -1
+  of CMD_NEXT:
+    if not next0(): return -1
+  of CMD_SELECT:
+    if not select0(): return -1
   else:
-    return showHelp()
+    if not openCurrent(): return showHelp()
 
 
 

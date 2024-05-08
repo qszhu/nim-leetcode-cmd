@@ -1,3 +1,7 @@
+import std/[
+  strutils,
+]
+
 import lib/rcs
 
 
@@ -11,6 +15,10 @@ const KEY_SESSION = "session"
 const KEY_LANG = "lang"
 const KEY_CONTEST = "contest"
 const KEY_EDITOR_CMD = "editor_cmd"
+const KEY_DIFF_CMD = "diff_cmd"
+const KEY_QUESTIONS = "questions"
+const KEY_CURRENT_QUESTION = "current_question"
+
 
 
 type
@@ -54,5 +62,23 @@ proc setEditorCmd*(self: NLCCRC, v: string) {.inline.} =
 
 proc getEditorCmd*(self: NLCCRC): string {.inline.} =
   self.get(KEY_EDITOR_CMD)
+
+proc setDiffCmd*(self: NLCCRC, v: string) {.inline.} =
+  self.set(KEY_DIFF_CMD, v)
+
+proc getDiffCmd*(self: NLCCRC): string {.inline.} =
+  self.get(KEY_DIFF_CMD)
+
+proc setContestQuestions*(self: NLCCRC, slugs: seq[string]) {.inline.} =
+  self.set(KEY_QUESTIONS, slugs.join(","))
+
+proc getContestQuestions*(self: NLCCRC): seq[string] {.inline.} =
+  self.get(KEY_QUESTIONS).split(",")
+
+proc setCurrentQuestion*(self: NLCCRC, i: int) {.inline.} =
+  self.set(KEY_CURRENT_QUESTION, $i)
+
+proc getCurrentQuestion*(self: NLCCRC): int {.inline.} =
+  self.get(KEY_CURRENT_QUESTION).parseInt
 
 let nlccrc* = initNLCCRC()

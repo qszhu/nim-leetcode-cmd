@@ -7,7 +7,8 @@ import std/[
 
 
 
-const TMPL_FUNC_FN = "nimFunc.tmpl"
+const TMPL_FUNC_FN = "nimjsFunc.tmpl"
+
 const TMPL_VAR_FUNCTION_NAME = "{{functionName}}"
 const TMPL_VAR_PARAMETERS = "{{parameters}}"
 const TMPL_VAR_RETURN_TYPE = "{{returnType}}"
@@ -38,13 +39,15 @@ proc genFunction(metaData: JsonNode): string =
   let parameters = getParams(metaData["params"])
   let returnType = if "return" in metaData: getType(metaData["return"]["type"].getStr) else: "void"
   let tmpl = readFile(TMPL_FUNC_FN)
-  result = tmpl.replace(TMPL_VAR_FUNCTION_NAME, functionName)
+  result = tmpl
+    .replace(TMPL_VAR_FUNCTION_NAME, functionName)
     .replace(TMPL_VAR_PARAMETERS, parameters)
     .replace(TMPL_VAR_RETURN_TYPE, returnType)
 
 proc genCode*(metaData: JsonNode): string =
   let className = metaData{"classname"}.getStr
   if className.len > 0:
+    # TODO: generate class
     raise newException(CatchableError, "Class not implemented")
   genFunction(metaData)
 
