@@ -1,8 +1,12 @@
 import std/[
+  options,
   strutils,
 ]
 
 import lib/rcs
+import consts
+
+export options, consts
 
 
 
@@ -27,11 +31,14 @@ type
 proc initNLCCRC*(): NLCCRC {.inline.} =
   initRunConfig(CFG_FN)
 
-proc setBrowser*(self: NLCCRC, v: string) {.inline.} =
-  self.set(KEY_BROWSER, v, section = SEC_SYNC)
+proc setBrowser*(self: NLCCRC, v: Browser) {.inline.} =
+  self.set(KEY_BROWSER, $v, section = SEC_SYNC)
 
-proc getBrowser*(self: NLCCRC): string {.inline.} =
-  self.get(KEY_BROWSER, section = SEC_SYNC)
+proc getBrowserOpt*(self: NLCCRC): Option[Browser] {.inline.} =
+  try:
+    some(parseEnum[Browser](self.get(KEY_BROWSER, section = SEC_SYNC)))
+  except:
+    none(Browser)
 
 proc setBrowserProfilePath*(self: NLCCRC, v: string) {.inline.} =
   self.set(KEY_PROFILE, v, section = SEC_SYNC)
@@ -45,11 +52,14 @@ proc setLeetCodeSession*(self: NLCCRC, v: string) {.inline.} =
 proc getLeetCodeSession*(self: NLCCRC): string {.inline.} =
   self.get(KEY_SESSION)
 
-proc setLanguage*(self: NLCCRC, v: string) {.inline.} =
-  self.set(KEY_LANG, v)
+proc setLanguage*(self: NLCCRC, v: Language) {.inline.} =
+  self.set(KEY_LANG, $v)
 
-proc getLanguage*(self: NLCCRC): string {.inline.} =
-  self.get(KEY_LANG)
+proc getLanguageOpt*(self: NLCCRC): Option[Language] {.inline.} =
+  try:
+    some(parseEnum[Language](self.get(KEY_LANG)))
+  except:
+    none(Language)
 
 proc setCurrentContest*(self: NLCCRC, v: string) {.inline.} =
   self.set(KEY_CONTEST, v)

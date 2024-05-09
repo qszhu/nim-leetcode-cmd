@@ -1,11 +1,11 @@
 import std/[
   os,
-  strutils,
   times,
 ]
 
 import ../jwts
 import session/[chrome, firefox]
+import ../../consts
 
 export jwts
 
@@ -15,16 +15,14 @@ proc getDefaultChromeProfilePath*(): string {.inline.} =
   # TODO: other oses
   getEnv("HOME") / "Library" / "Application Support" / "Google" / "Chrome" / "Default"
 
-proc readSession*(browser, profilePath: string): JsonWebToken =
-  case browser.toLowerAscii
-  of "firefox":
+proc readSession*(browser: Browser, profilePath: string): JsonWebToken =
+  case browser
+  of Browser.FIREFOX:
     let dbFn = profilePath / "cookies.sqlite"
     initJWT(readSessionFromFirefox(dbFn))
-  of "chrome":
+  of Browser.CHROME:
     let dbFn = profilePath / "Cookies"
     initJWT(readSessionFromChrome(dbFn))
-  else:
-    raise newException(ValueError, "Unsupported browser: " & browser)
 
 proc getUserName*(jwt: JsonWebToken): string {.inline.} =
   jwt.payload["username"].getStr

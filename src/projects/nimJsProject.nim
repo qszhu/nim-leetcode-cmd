@@ -17,8 +17,8 @@ proc initNimJsProject*(info: ProjectInfo): NimJsProject =
   result.init(info)
   result.code = genCode(info.metaData)
 
-method submitLang*(self: NimJsProject): string {.inline.} =
-  TARGET_LANG_JS
+method submitLang*(self: NimJsProject): SubmitLanguage {.inline.} =
+  SubmitLanguage.JAVASCRIPT
 
 method srcFileExt*(self: NimJsProject): string =
   "nim"

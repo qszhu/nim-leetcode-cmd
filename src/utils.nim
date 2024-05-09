@@ -10,6 +10,10 @@ import consts
 
 
 
+proc refreshEcho*(msg: string) =
+  stdout.write &"\r{msg}" & " ".repeat(10)
+  stdout.flushFile
+
 proc getContestSlug*(s: string): string =
   if not s.startsWith("http"): return s
   let res = s.parseUri
@@ -18,14 +22,14 @@ proc getContestSlug*(s: string): string =
 proc getQuestionUrl*(contestSlug, questionSlug: string, host = "https://leetcode.cn"): Uri {.inline.} =
   host.parseUri / "contest" / contestSlug / "problems" / (questionSlug & "/")
 
-proc openUrlInBrowser*(browser: string, uri: Uri) =
+proc openUrlInBrowser*(browser: Browser, uri: Uri) =
   # TODO: other oses
   let cmd =
     case browser
-    of BROWSER_CHROME:
+    of Browser.CHROME:
       &"open -a \"Google Chrome.app\" {uri}"
     else:
-      raise newException(ValueError, "Unsupported browser: " & browser)
+      raise newException(ValueError, "Unsupported browser: " & $browser)
   discard execShellCmd(cmd)
 
 

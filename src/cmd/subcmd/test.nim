@@ -1,5 +1,4 @@
 import std/[
-  sequtils,
   strutils,
 ]
 
@@ -7,11 +6,9 @@ import ../../lib/leetcode/lcClient
 import ../../projects/projects
 import ../../nlccrcs
 import ../../consts
+import utils
 
 
-
-proc getOutput(jso: JsonNode): string {.inline.} =
-  jso.getElems.mapIt(it.getStr).join("\n")
 
 proc runDiff(fa, fb: string): bool =
   if not fileExists(fa) or not fileExists(fb): return
@@ -32,15 +29,10 @@ proc testCmd*(proj: BaseProject): bool =
 
   let res = proj.test(client)
 
-  let output = getOutput(res["code_output"])
-  if output.len > 0:
-    echo "Code output:"
-    echo output
+  showCodeOutput(res)
 
   # Runtime Error
-  if not res["run_success"].getBool:
-    echo res["full_runtime_error"].getStr
-    return
+  if not showRuntimeError(res): return
 
   # compare output
   writeFile(proj.testMyOutputFn, getOutput(res["code_answer"]))
@@ -49,7 +41,6 @@ proc testCmd*(proj: BaseProject): bool =
   else:
     if not runDiff(proj.testOutputFn, proj.testMyOutputFn): return
 
-  echo "Runtime: ", res["status_runtime"].getStr
-  echo "Memory: ", res["status_memory"].getStr
+  showRuntimeMemory(res)
 
   true

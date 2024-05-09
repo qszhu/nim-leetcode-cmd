@@ -4,9 +4,13 @@ const TMPL_VAR_SOLUTION_SRC* = "{{solutionSrc}}"
 const TMPL_VAR_DIFF_A* = "{{diffA}}"
 const TMPL_VAR_DIFF_B* = "{{diffB}}"
 
-const LANG_NIM_JS* = "nimjs"
+type Language* = enum
+  NIM_JS = "nimjs"
+  PYTHON = "python"
 
-const TARGET_LANG_JS* = "javascript"
+type SubmitLanguage* = enum
+  JAVASCRIPT = "javascript"
 
-const BROWSER_FIREFOX* = "firefox"
-const BROWSER_CHROME* = "chrome"
+type Browser* = enum
+  FIREFOX = "firefox"
+  CHROME = "chrome"

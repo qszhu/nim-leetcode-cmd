@@ -11,6 +11,7 @@
 * rank
 ]#
 import std/[
+  sequtils,
   strformat,
   strutils,
   times,
@@ -40,18 +41,25 @@ proc sync0(): bool =
 
   let force = args.getOption(OPT_FORCE) == "1"
 
-  var browser = if force: "" else: nlccrc.getBrowser
-  if browser.len == 0:
-    if not prompt("Choose browser", browser, default = "chrome"): return
+  var browserOpt = if force: none(Browser) else: nlccrc.getBrowserOpt
+  if browserOpt.isNone:
+    var browser: string
+    if not prompt("Choose browser", browser,
+      choices = Browser.toSeq.mapIt($it), default = $Browser.CHROME): return
+
+    try:
+      browserOpt = some(parseEnum[Browser](browser))
+    except:
+      return
 
   var profilePath = if force: "" else: nlccrc.getBrowserProfilePath
   if profilePath.len == 0:
-    let default = if browser.toLowerAscii == "chrome": getDefaultChromeProfilePath() else: ""
+    let default = if browserOpt.get == Browser.CHROME: getDefaultChromeProfilePath() else: ""
     if not prompt("Browser profile path", profilePath, default): return
 
-  if not syncCmd(browser, profilePath): return
+  if not syncCmd(browserOpt.get, profilePath): return
 
-  nlccrc.setBrowser(browser)
+  nlccrc.setBrowser(browserOpt.get)
   nlccrc.setBrowserProfilePath(profilePath)
 
   true
@@ -62,12 +70,10 @@ proc start0(): bool =
   var contestSlug = args.getArg(1).getContestSlug
   if contestSlug.len == 0:
     contestSlug = nlccrc.getCurrentContest
-  if contestSlug.len == 0:
-    if not prompt("Contest slug or url", contestSlug): return
 
-  if startCmd(contestSlug):
-    nlccrc.setCurrentContest(contestSlug)
+  if not startCmd(contestSlug): return
 
+  nlccrc.setCurrentContest(contestSlug)
   openCurrent()
 
 proc build0(): bool =
@@ -110,21 +116,24 @@ proc select0(): bool =
 proc initCurrentProject(): BaseProject =
   let contestSlug = nlccrc.getCurrentContest
   let questionSlug = nlccrc.getContestQuestions[nlccrc.getCurrentQuestion]
-  let lang = nlccrc.getLanguage
+  let langOpt = nlccrc.getLanguageOpt
+  let lang = langOpt.get
   case lang
-  of LANG_NIM_JS:
+  of Language.NIM_JS:
     let proj = NimJsProject.new
     proj.initFromProject(contestSlug, questionSlug, lang)
     return proj
   else:
-    raise newException(ValueError, "Unsupported language: " & lang)
+    raise newException(ValueError, "Unsupported language: " & $lang)
 
 proc openCurrent(): bool =
   let proj = initCurrentProject()
   proj.openInEditor
 
-  let browser = nlccrc.getBrowser
-  openUrlInBrowser(browser, getQuestionUrl(proj.contestSlug, proj.questionSlug))
+  let browserOpt = nlccrc.getBrowserOpt
+  if browserOpt.isNone: return
+
+  openUrlInBrowser(browserOpt.get, getQuestionUrl(proj.contestSlug, proj.questionSlug))
 
   true
 
@@ -145,10 +154,16 @@ proc check(): bool =
   if lcSession.getExpireTimestamp - getTime().toUnix <= SESSION_EXPIRE_WARNING_SECS:
     echo &"Warning: Session expires at {lcSession.getExpireTime}. Consider refresh session in the browser and run \"nlcc sync\" again."
 
-  var lang = nlccrc.getLanguage
-  if lang.len == 0:
-    if not prompt("Choose language", lang): return
-    nlccrc.setLanguage(lang)
+  let langOpt = nlccrc.getLanguageOpt
+  if langOpt.isNone:
+    var lang: string
+    if not prompt("Choose language", lang,
+      choices = Language.toSeq.mapIt($it)): return
+    try:
+      nlccrc.setLanguage(parseEnum[Language](lang))
+    except:
+      echo "Unknown language: " & lang
+      return
 
   true
 
@@ -160,20 +175,20 @@ proc main(): int =
   case args.getArg(0)
   of CMD_SYNC:
     if not sync0(): return -1
-  of CMD_START:
-    if not start0(): return -1
   of CMD_BUILD:
     if not build0(): return -1
   of CMD_TEST:
+    if not build0(): return -1
     if not test0(): return -1
   of CMD_SUBMIT:
+    if not build0(): return -1
     if not submit0(): return -1
   of CMD_NEXT:
     if not next0(): return -1
   of CMD_SELECT:
     if not select0(): return -1
   else:
-    if not openCurrent(): return showHelp()
+    if not start0(): return -1
 
 
 

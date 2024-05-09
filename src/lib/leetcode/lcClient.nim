@@ -248,6 +248,12 @@ proc submitSolution*(self: LcClient,
   let respBody = await res.body
   return respBody.parseJson
 
+proc register*(self: LcClient, contestSlug: string) {.async.} =
+  let url = self.host / "contest" / "api" / contestSlug / "register"
+  self.setReferer $url
+  self.setSessionCookie
+  discard await self.client.request(url, httpMethod = HttpPost)
+
 proc timestamp*(self: LcClient): Future[JsonNode] {.async.} =
   let url = self.host / "timestamp/"
   let res = await self.client.request(url, httpMethod = HttpGet)

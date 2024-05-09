@@ -10,6 +10,7 @@ import ../lib/leetcode/lcClient
 import ../nlccrcs
 import ../projectrcs
 import ../consts
+import ../utils
 
 export os
 
@@ -20,7 +21,7 @@ type
     contestSlug*: string
     titleSlug*: string
     questionId*: string
-    lang*: string
+    lang*: Language
 
     testInput*: string
     codeSnippets*: Table[string, string]
@@ -43,8 +44,8 @@ method questionSlug*(self: BaseProject): string {.base, inline.} =
 method init*(self: BaseProject, info: ProjectInfo) {.base, inline.} =
   self.info = info
 
-method submitLang*(self: BaseProject): string {.base, inline.} =
-  self.info.lang
+method submitLang*(self: BaseProject): SubmitLanguage {.base, inline.} =
+  raise newException(CatchableError, "Not implemented")
 
 method srcFileExt*(self: BaseProject): string {.base, inline.} =
   raise newException(CatchableError, "Not implemented")
@@ -56,7 +57,7 @@ method build*(self: BaseProject): bool {.base, inline.} =
   raise newException(CatchableError, "Not implemented")
 
 method rootDir*(self: BaseProject): string {.base, inline.} =
-  ROOT_DIR / self.info.contestSlug / self.info.titleSlug / self.info.lang
+  ROOT_DIR / self.info.contestSlug / self.info.titleSlug / $self.info.lang
 
 method srcDir*(self: BaseProject): string {.base, inline.} =
   self.rootDir / "src"
@@ -109,11 +110,15 @@ method initProjectDir*(self: BaseProject) {.base.} =
     self.curSolutionFn = srcFn
     rc.setCurrentSrc(srcFn)
 
+proc showSubmissionState*(jso: JsonNode) =
+  let state = jso["state"].getStr
+  refreshEcho state
+
 proc checkResult(client: LcClient, submitId: string, isTest: bool): Future[JsonNode] {.async.} =
   while true:
     let res = await client.checkSubmissionResult(submitId, isTest)
     if "status_msg" notin res:
-      echo res["state"].getStr
+      showSubmissionState(res)
     else:
       return res
     await sleepAsync(1000)
@@ -122,19 +127,19 @@ method test*(self: BaseProject, client: LcClient): JsonNode {.base.} =
   let code = readFile(self.targetFn)
   let testInput = readFile(self.testInputFn)
   result = waitFor client.testContestSolution(
-    self.info.contestSlug, self.info.titleSlug, self.info.questionId, self.submitLang, code, testInput)
+    self.info.contestSlug, self.info.titleSlug, self.info.questionId, $self.submitLang, code, testInput)
   let interpretId = result["interpret_id"].getStr
   result = waitFor client.checkResult(interpretId, isTest = true)
 
 method submit*(self: BaseProject, client: LcClient): JsonNode {.base.} =
   let code = readFile(self.targetFn)
   result = waitFor client.submitContestSolution(
-    self.info.contestSlug, self.info.titleSlug, self.info.questionId, self.submitLang, code)
+    self.info.contestSlug, self.info.titleSlug, self.info.questionId, $self.submitLang, code)
   let submitId = $(result["submission_id"].getBiggestInt)
   result = waitFor client.checkResult(submitId, isTest = false)
 
-method initFromProject*(self: BaseProject, contestSlug, titleSlug, lang: string) {.base.} =
-  let dir = ROOT_DIR / contestSlug / titleSlug / lang
+method initFromProject*(self: BaseProject, contestSlug, titleSlug: string, lang: Language) {.base.} =
+  let dir = ROOT_DIR / contestSlug / titleSlug / $lang
   let rc = initProjectRC(dir)
   self.init(ProjectInfo(
     contestSlug: contestSlug,
