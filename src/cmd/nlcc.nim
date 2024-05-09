@@ -113,6 +113,25 @@ proc select0(): bool =
 
   openCurrent()
 
+proc startIdx0(): bool =
+  var s: string
+  if not prompt(&"Default start question index [1..4]:", s): return
+  let n = s.parseInt
+  if n notin 1 .. 4: return
+  nlccrc.setStartIndex(n - 1)
+
+proc lang0(): bool =
+  var lang: string
+  if not prompt("Choose language", lang,
+    choices = Language.toSeq.mapIt($it)): return
+
+  try:
+    nlccrc.setLanguage(parseEnum[Language](lang))
+  except:
+    echo "Unknown language: " & lang
+    return
+  true
+
 proc initCurrentProject(): BaseProject =
   let contestSlug = nlccrc.getCurrentContest
   let questionSlug = nlccrc.getContestQuestions[nlccrc.getCurrentQuestion]
@@ -138,12 +157,6 @@ proc openCurrent(): bool =
   true
 
 proc check(): bool =
-  if nlccrc.getEditorCmd.len == 0:
-    nlccrc.setEditorCmd(&"code {TMPL_VAR_SOLUTION_SRC}")
-
-  if nlccrc.getDiffCmd.len == 0:
-    nlccrc.setDiffCmd(&"code --diff {TMPL_VAR_DIFF_A} {TMPL_VAR_DIFF_B}")
-
   var session = nlccrc.getLeetCodeSession
   if session.len == 0:
     if not sync0(): return
@@ -156,14 +169,7 @@ proc check(): bool =
 
   let langOpt = nlccrc.getLanguageOpt
   if langOpt.isNone:
-    var lang: string
-    if not prompt("Choose language", lang,
-      choices = Language.toSeq.mapIt($it)): return
-    try:
-      nlccrc.setLanguage(parseEnum[Language](lang))
-    except:
-      echo "Unknown language: " & lang
-      return
+    if not lang0(): return
 
   true
 
@@ -187,6 +193,12 @@ proc main(): int =
     if not next0(): return -1
   of CMD_SELECT:
     if not select0(): return -1
+  of CMD_START_IDX:
+    if not startIdx0(): return -1
+  of CMD_LANG:
+    if not lang0(): return -1
+  # TODO: custom editor command
+  # TODO: custom diff command
   else:
     if not start0(): return -1
 

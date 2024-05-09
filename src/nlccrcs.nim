@@ -1,5 +1,6 @@
 import std/[
   options,
+  strformat,
   strutils,
 ]
 
@@ -22,7 +23,11 @@ const KEY_EDITOR_CMD = "editor_cmd"
 const KEY_DIFF_CMD = "diff_cmd"
 const KEY_QUESTIONS = "questions"
 const KEY_CURRENT_QUESTION = "current_question"
+const KEY_START_INDEX = "start_index"
 
+const DEFAULT_EDITOR_CMD = &"code {TMPL_VAR_SOLUTION_SRC}"
+const DEFAULT_DIFF_CMD = &"code --diff {TMPL_VAR_DIFF_A} {TMPL_VAR_DIFF_B}"
+const DEFAULT_START_IDX = 0
 
 
 type
@@ -70,14 +75,14 @@ proc getCurrentContest*(self: NLCCRC): string {.inline.} =
 proc setEditorCmd*(self: NLCCRC, v: string) {.inline.} =
   self.set(KEY_EDITOR_CMD, v)
 
-proc getEditorCmd*(self: NLCCRC): string {.inline.} =
-  self.get(KEY_EDITOR_CMD)
+proc getEditorCmd*(self: NLCCRC, default = DEFAULT_EDITOR_CMD): string {.inline.} =
+  self.get(KEY_EDITOR_CMD, default)
 
 proc setDiffCmd*(self: NLCCRC, v: string) {.inline.} =
   self.set(KEY_DIFF_CMD, v)
 
-proc getDiffCmd*(self: NLCCRC): string {.inline.} =
-  self.get(KEY_DIFF_CMD)
+proc getDiffCmd*(self: NLCCRC, default = DEFAULT_DIFF_CMD): string {.inline.} =
+  self.get(KEY_DIFF_CMD, default)
 
 proc setContestQuestions*(self: NLCCRC, slugs: seq[string]) {.inline.} =
   self.set(KEY_QUESTIONS, slugs.join(","))
@@ -90,5 +95,11 @@ proc setCurrentQuestion*(self: NLCCRC, i: int) {.inline.} =
 
 proc getCurrentQuestion*(self: NLCCRC): int {.inline.} =
   self.get(KEY_CURRENT_QUESTION).parseInt
+
+proc setStartIndex*(self: NLCCRC, i: int) {.inline.} =
+  self.set(KEY_START_INDEX, $i)
+
+proc getStartIndex*(self: NLCCRC, default = DEFAULT_START_IDX): int {.inline.} =
+  self.get(KEY_START_INDEX, $default).parseInt
 
 let nlccrc* = initNLCCRC()
