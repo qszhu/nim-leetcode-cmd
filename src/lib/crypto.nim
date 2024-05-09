@@ -1,22 +1,15 @@
 import std/[
-  base64,
   endians,
   os,
-  osproc,
   sequtils,
   strformat,
   strutils,
   tempfiles,
 ]
 
+from checksums/sha1 import nil
 
 
-proc writeInt32BE(n: int): string =
-  var n = n.int32
-  var r: int32
-  bigEndian32(addr(r), addr(n))
-  let a = cast[array[4, uint8]](r)
-  result = cast[string](a.toSeq)
 
 proc strxor(a, b: string): string =
   var a = cast[seq[uint8]](a)
@@ -25,18 +18,40 @@ proc strxor(a, b: string): string =
     a[i] = a[i] xor b[i]
   cast[string](a)
 
-proc hmac(key, msg: string, algo = "sha1"): string =
-  # TODO: native implementation
-  let (_, inputFn) = createTempfile("message", ".bin")
-  try:
-    writeFile(inputFn, msg)
-    let cmd = &"openssl dgst -{algo} -hmac {key} --binary {inputFn} | openssl base64"
-    result = execProcess(cmd).decode
-  finally:
-    removeFile(inputFn)
+type
+  HmacFunc = proc (key, msg: string): string
+
+# https://en.wikipedia.org/wiki/HMAC
+proc hmacsha1(key, msg: string): string =
+  const blockLen = 64
+  const targetLen = 20
+  let opad = "\x5c".repeat(blockLen)
+  let ipad = "\x36".repeat(blockLen)
+
+  proc hash(msg: string): string =
+    cast[string](cast[array[targetLen, uint8]](sha1.secureHash(msg)).toSeq)
+
+  proc getBlockKey(key: string): string =
+    result = key
+    if result.len > blockLen:
+      result = hash(result)
+    if result.len < blockLen:
+      result &= "\x00".repeat(blockLen - result.len)
+
+  let key = key.getBlockKey
+  let okeypad = strxor(key, opad)
+  let ikeypad = strxor(key, ipad)
+  hash(okeypad & hash(ikeypad & msg))
+
+proc writeInt32BE(n: int): string =
+  var n = n.int32
+  var r: int32
+  bigEndian32(addr(r), addr(n))
+  let a = cast[array[4, uint8]](r)
+  result = cast[string](a.toSeq)
 
 # https://en.wikipedia.org/wiki/PBKDF2
-proc pbkdf2*(password, salt: string, iterations, keyLen: int): string =
+proc pbkdf2*(password, salt: string, iterations, keyLen: int, hmac: HmacFunc = hmacsha1): string =
   var i = 1
   result = ""
   while result.len < keyLen:
