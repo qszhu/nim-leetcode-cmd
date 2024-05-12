@@ -26,6 +26,7 @@ type
     testInput*: string
     codeSnippets*: Table[string, string]
     metaData*: JsonNode
+    order*: int
 
 type
   BaseProject* = ref object of RootObj
@@ -57,7 +58,7 @@ method build*(self: BaseProject): bool {.base, inline.} =
   raise newException(CatchableError, "Not implemented")
 
 method rootDir*(self: BaseProject): string {.base, inline.} =
-  ROOT_DIR / self.info.contestSlug / self.info.titleSlug / $self.info.lang
+  ROOT_DIR / self.info.contestSlug / &"{self.info.order}.{self.info.titleSlug}" / $self.info.lang
 
 method srcDir*(self: BaseProject): string {.base, inline.} =
   self.rootDir / "src"
@@ -98,9 +99,8 @@ method initProjectDir*(self: BaseProject) {.base.} =
   createDir(self.testDir)
 
   let rc = initProjectRC(self.rootDir)
-  # rc.setContestSlug(self.info.contestSlug)
-  # rc.setQuestionSlug(self.info.titleSlug)
   rc.setQuestionId(self.info.questionId)
+  rc.setQuestionOrder(self.info.order)
 
   if not fileExists(self.testInputFn) and self.info.testInput.len > 0:
     writeFile(self.testInputFn, self.info.testInput)
@@ -146,5 +146,6 @@ method initFromProject*(self: BaseProject, contestSlug, titleSlug: string, lang:
     titleSlug: titleSlug,
     questionId: rc.getQuestionId,
     lang: lang,
+    order: rc.getQuestionOrder,
   ))
   self.curSolutionFn = rc.getCurrentSrc

@@ -132,12 +132,11 @@ proc startCmd*(contestSlug: string): bool =
 
   countDown(contestInfo, client)
 
-  let questions = info["questions"].mapIt(it.initQuestionInfo).sortedByIt(it.credit)
-
+  let questions = info["questions"].mapIt(it.initQuestionInfo)
 
   let langOpt = nlccrc.getLanguageOpt
 
-  for q in questions:
+  for i, q in questions:
     let snippets = waitFor client.getQuestionCodeSnippets(q.titleSlug)
     let (testInput, metaData) = waitFor client.getQuestionTestCasesAndMeta(q.titleSlug)
     let proj = initProject(ProjectInfo(
@@ -148,6 +147,7 @@ proc startCmd*(contestSlug: string): bool =
       testInput: testInput,
       codeSnippets: snippets,
       metaData: metaData,
+      order: i + 1,
     ))
     proj.initProjectDir
 

@@ -82,3 +82,6 @@ proc decrypt*(encrypted, key, iv: string, algo = "aes-128-cbc"): string =
   finally:
     removeFile(encFn)
     removeFile(decFn)
+
+# DON'T USE IN PRODUCTION
+# http://www.moserware.com/2009/09/stick-figure-guide-to-advanced.html
