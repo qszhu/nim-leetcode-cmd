@@ -58,7 +58,10 @@ method build*(self: BaseProject): bool {.base, inline.} =
   raise newException(CatchableError, "Not implemented")
 
 method rootDir*(self: BaseProject): string {.base, inline.} =
-  ROOT_DIR / self.info.contestSlug / &"{self.info.order}.{self.info.titleSlug}" / $self.info.lang
+  if self.info.order == 0:
+    ROOT_DIR / self.info.contestSlug / self.info.titleSlug / $self.info.lang
+  else:
+    ROOT_DIR / self.info.contestSlug / &"{self.info.order}.{self.info.titleSlug}" / $self.info.lang
 
 method srcDir*(self: BaseProject): string {.base, inline.} =
   self.rootDir / "src"
