@@ -5,7 +5,7 @@ import std/[
   tables,
 ]
 
-import ../../lib/leetcode/lcClient
+import ../../lib/leetcode/[lcClient, pageData]
 import ../../nlccrcs
 import ../../projects/projects
 import ../../consts
@@ -63,9 +63,7 @@ type
 
 proc initCodeSnippets(jso: JsonNode): CodeSnippets =
   for r in jso:
-    result[r["langSlug"].getStr] = r["code"].getStr
-
-
+    result[r["value"].getStr] = r["defaultCode"].getStr
 
 proc initProject(info: ProjectInfo): BaseProject =
   case info.lang
@@ -74,15 +72,11 @@ proc initProject(info: ProjectInfo): BaseProject =
   else:
     raise newException(ValueError, "Unsupported language: " & $info.lang)
 
-proc getQuestionCodeSnippets(client: LcClient, titleSlug: string): Future[CodeSnippets] {.async.} =
-  let res = await client.questionEditorData(titleSlug)
-  initCodeSnippets(res["data"]["question"]["codeSnippets"])
-
-proc getQuestionTestCasesAndMeta(client: LcClient, titleSlug: string): Future[(string, JsonNode)] {.async.} =
-  let res = await client.consolePanelConfig(titleSlug)
-  let testInput = res["data"]["question"]["exampleTestcases"].getStr
-  let metaData = res["data"]["question"]["metaData"].getStr.parseJson
-  (testInput, metaData)
+proc getContestQuestionPageData(client: LcClient,
+  contestSlug, titleSlug: string
+): Future[JsonNode] {.async.} =
+  let html = await client.getPage(contestSlug, titleSlug)
+  return parsePageData(html)
 
 proc countDown(contest: ContestInfo, client: LcClient) =
   echo contest.title
@@ -137,8 +131,10 @@ proc startCmd*(contestSlug: string): bool =
   let langOpt = nlccrc.getLanguageOpt
 
   for i, q in questions:
-    let snippets = waitFor client.getQuestionCodeSnippets(q.titleSlug)
-    let (testInput, metaData) = waitFor client.getQuestionTestCasesAndMeta(q.titleSlug)
+    let res = waitFor client.getContestQuestionPageData(contestSlug, q.titleSlug)
+    let snippets = initCodeSnippets(res["codeDefinition"])
+    let testInput = res["questionExampleTestcases"].getStr
+    let metaData = res["metaData"]
     let proj = initProject(ProjectInfo(
       contestSlug: contestSlug,
       titleSlug: q.titleSlug,

@@ -76,13 +76,13 @@ proc setEditorCmd*(self: NLCCRC, v: string) {.inline.} =
   self.set(KEY_EDITOR_CMD, v)
 
 proc getEditorCmd*(self: NLCCRC, default = DEFAULT_EDITOR_CMD): string {.inline.} =
-  self.get(KEY_EDITOR_CMD, default)
+  self.get(KEY_EDITOR_CMD, default = default)
 
 proc setDiffCmd*(self: NLCCRC, v: string) {.inline.} =
   self.set(KEY_DIFF_CMD, v)
 
 proc getDiffCmd*(self: NLCCRC, default = DEFAULT_DIFF_CMD): string {.inline.} =
-  self.get(KEY_DIFF_CMD, default)
+  self.get(KEY_DIFF_CMD, default = default)
 
 proc setContestQuestions*(self: NLCCRC, slugs: seq[string]) {.inline.} =
   self.set(KEY_QUESTIONS, slugs.join(","))
@@ -100,6 +100,6 @@ proc setStartIndex*(self: NLCCRC, i: int) {.inline.} =
   self.set(KEY_START_INDEX, $i)
 
 proc getStartIndex*(self: NLCCRC, default = DEFAULT_START_IDX): int {.inline.} =
-  self.get(KEY_START_INDEX, $default).parseInt
+  self.get(KEY_START_INDEX, default = $default).parseInt
 
 let nlccrc* = initNLCCRC()

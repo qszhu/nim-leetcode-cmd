@@ -103,7 +103,6 @@ method initProjectDir*(self: BaseProject) {.base.} =
 
   let rc = initProjectRC(self.rootDir)
   rc.setQuestionId(self.info.questionId)
-  rc.setQuestionOrder(self.info.order)
 
   if not fileExists(self.testInputFn) and self.info.testInput.len > 0:
     writeFile(self.testInputFn, self.info.testInput)
@@ -141,14 +140,15 @@ method submit*(self: BaseProject, client: LcClient): JsonNode {.base.} =
   let submitId = $(result["submission_id"].getBiggestInt)
   result = waitFor client.checkResult(submitId, isTest = false)
 
-method initFromProject*(self: BaseProject, contestSlug, titleSlug: string, lang: Language) {.base.} =
-  let dir = ROOT_DIR / contestSlug / titleSlug / $lang
+method initFromProject*(self: BaseProject, contestSlug, titleSlug: string, lang: Language, currentQuestion: int) {.base.} =
+  let order = currentQuestion + 1
+  let dir = ROOT_DIR / contestSlug / &"{order}.{titleSlug}" / $lang
   let rc = initProjectRC(dir)
   self.init(ProjectInfo(
     contestSlug: contestSlug,
     titleSlug: titleSlug,
     questionId: rc.getQuestionId,
     lang: lang,
-    order: rc.getQuestionOrder,
+    order: order,
   ))
   self.curSolutionFn = rc.getCurrentSrc

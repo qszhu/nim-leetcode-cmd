@@ -68,8 +68,6 @@ proc start0(): bool =
   let args = initArgs().parse
 
   var contestSlug = args.getArg(1).getContestSlug
-  if contestSlug.len == 0:
-    contestSlug = nlccrc.getCurrentContest
 
   if not startCmd(contestSlug): return
 
@@ -140,7 +138,7 @@ proc initCurrentProject(): BaseProject =
   case lang
   of Language.NIM_JS:
     let proj = NimJsProject.new
-    proj.initFromProject(contestSlug, questionSlug, lang)
+    proj.initFromProject(contestSlug, questionSlug, lang, nlccrc.getCurrentQuestion)
     return proj
   else:
     raise newException(ValueError, "Unsupported language: " & $lang)

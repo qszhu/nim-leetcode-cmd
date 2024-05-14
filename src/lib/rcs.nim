@@ -26,5 +26,5 @@ proc set*(self: RunConfig, key, value: string, section = "") =
   self.cfg.setSectionKey(section, key, value)
   self.save
 
-proc get*(self: RunConfig, key: string, section = ""): string =
-  self.cfg.getSectionValue(section, key)
+proc get*(self: RunConfig, key: string, section = "", default = ""): string =
+  self.cfg.getSectionValue(section, key, default)

@@ -5,3 +5,4 @@ lib/
 .*rc
 *.tmpl
 TODO.md
+out.html

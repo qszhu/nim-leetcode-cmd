@@ -133,7 +133,7 @@ proc questionDiscussComments*(self: LcClient,
   return await questionDiscussComments(self.client, self.host, topicId, orderBy, numPerPage, skip)
 
 proc questionEditorData*(self: LcClient,
-  titleSlug: string
+  titleSlug: string,
 ): Future[JsonNode] {.async.} =
   return await questionEditorData(self.client, self.host, titleSlug)
 
@@ -291,6 +291,12 @@ proc contestRanking*(self: LcClient,
   let res = await self.client.request(url, httpMethod = HttpGet)
   let respBody = await res.body
   return respBody.parseJson
+
+proc getPage*(self: LcClient, contestSlug, titleSlug: string): Future[string] {.async.} =
+  let url = self.host / "contest" / contestSlug / "problems" / (titleSlug & "/")
+  let res = await self.client.request(url, httpMethod = HttpGet)
+  let respBody = await res.body
+  return respBody
 
 proc testContestSolution*(self: LcClient,
   contestSlug: string,
