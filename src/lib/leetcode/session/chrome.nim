@@ -7,7 +7,7 @@ import std/[
 
 import db_connector/db_sqlite
 
-import ../../crypto
+import ../../crypto/[pbkdf, aes]
 
 
 

@@ -32,3 +32,8 @@ proc getExpireTimestamp*(jwt: JsonWebToken): int64 {.inline.} =
 
 proc getExpireTime*(jwt: JsonWebToken): string =
   jwt.getExpireTimestamp.fromUnix.format("yyyy-MM-dd HH:mm:ss")
+
+
+
+when isMainModule:
+  echo readSession(Browser.CHROME, getDefaultChromeProfilePath())
