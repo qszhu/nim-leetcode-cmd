@@ -22,7 +22,7 @@ proc getType(ts: string): string =
     if ts =~ re"([^\[]+)\[\]":
       let ts = matches[0]
       &"seq[{getType(ts)}]"
-    elif ts =~ re"list<([^>]+)>":
+    elif ts =~ re"list<(.+)>":
       let ts = matches[0]
       &"seq[{getType(ts)}]"
     else: ts
@@ -56,3 +56,5 @@ proc genCode*(metaData: JsonNode): string =
 when isMainModule:
   doAssert getType("double[]") == "seq[cfloat]"
   doAssert getType("list<character>") == "seq[cstring]"
+  doAssert getType("list<integer>") == "seq[cfloat]"
+  doAssert getType("list<list<integer>>") == "seq[seq[cfloat]]"

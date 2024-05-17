@@ -7,6 +7,10 @@ const TMPL_VAR_DIFF_B* = "{{diffB}}"
 type Language* = enum
   NIM_JS = "nimjs"
   PYTHON = "python"
+  JAVA = "java"
+  JAVASCRIPT = "javascript"
+  TYPESCRIPT = "typescript"
+  CPP = "cpp"
 
 type SubmitLanguage* = enum
   JAVASCRIPT = "javascript"

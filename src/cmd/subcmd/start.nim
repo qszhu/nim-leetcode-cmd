@@ -10,6 +10,7 @@ import ../../nlccrcs
 import ../../projects/projects
 import ../../consts
 import utils
+import ../../utils
 
 
 
@@ -113,8 +114,7 @@ proc startCmd*(contestSlug: string): bool =
 
   if not contestInfo.isVirtual and not registered:
     echo "Warning: not registered for " & contestInfo.title
-    stdout.write "Registering..."
-    stdout.flushFile
+    refreshEcho "Registering..."
     waitFor client.register(contestInfo.contestSlug)
     let info = waitFor client.contestInfo(contestSlug)
     let registered = info["registered"].getBool

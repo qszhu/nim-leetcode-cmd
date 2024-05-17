@@ -122,6 +122,7 @@ proc checkResult(client: LcClient, submitId: string, isTest: bool): Future[JsonN
     if "status_msg" notin res:
       showSubmissionState(res)
     else:
+      echo ""
       return res
     await sleepAsync(1000)
 
