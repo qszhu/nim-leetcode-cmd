@@ -2,6 +2,7 @@ import std/[
   algorithm,
   json,
   sequtils,
+  strformat,
   tables,
 ]
 
@@ -131,6 +132,7 @@ proc startCmd*(contestSlug: string): bool =
   let langOpt = nlccrc.getLanguageOpt
 
   for i, q in questions:
+    echo &"{i + 1}.{q.title}"
     let res = waitFor client.getContestQuestionPageData(contestSlug, q.titleSlug)
     let snippets = initCodeSnippets(res["codeDefinition"])
     let testInput = res["questionExampleTestcases"].getStr
