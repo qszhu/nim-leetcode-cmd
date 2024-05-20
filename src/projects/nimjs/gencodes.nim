@@ -1,5 +1,6 @@
 import std/[
   json,
+  os,
   re,
   strformat,
   strutils,
@@ -12,6 +13,15 @@ const TMPL_FUNC_FN = "nimjsFunc.tmpl"
 const TMPL_VAR_FUNCTION_NAME = "{{functionName}}"
 const TMPL_VAR_PARAMETERS = "{{parameters}}"
 const TMPL_VAR_RETURN_TYPE = "{{returnType}}"
+
+proc ensureDefaultTmpl() =
+  if fileExists(TMPL_FUNC_FN): return
+  let content = &"""
+proc {TMPL_VAR_FUNCTION_NAME}({TMPL_VAR_PARAMETERS}): {TMPL_VAR_RETURN_TYPE} {{.exportc.}} =
+  # TODO
+  discard
+"""
+  writeFile(TMPL_FUNC_FN, content)
 
 proc getType(ts: string): string =
   case ts
@@ -44,6 +54,7 @@ proc genFunction(metaData: JsonNode): string =
     .replace(TMPL_VAR_RETURN_TYPE, returnType)
 
 proc genCode*(metaData: JsonNode): string =
+  ensureDefaultTmpl()
   let className = metaData{"classname"}.getStr
   if className.len > 0:
     # TODO: generate class

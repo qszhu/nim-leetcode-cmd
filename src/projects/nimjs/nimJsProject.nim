@@ -3,9 +3,9 @@ import std/[
   strformat,
 ]
 
-import baseProject
-import nimjs/gencodes
-import ../consts
+import ../baseProject
+import gencodes
+import ../../consts
 
 
 
