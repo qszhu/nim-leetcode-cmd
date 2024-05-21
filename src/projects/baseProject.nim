@@ -106,11 +106,12 @@ method initProjectDir*(self: BaseProject) {.base.} =
 
   if not fileExists(self.testInputFn) and self.info.testInput.len > 0:
     writeFile(self.testInputFn, self.info.testInput)
-  if self.code.len > 0:
-    let srcFn = self.getNextSolutionFn
+  var srcFn = rc.getCurrentSrc
+  if srcFn.len == 0: srcFn = self.getNextSolutionFn
+  if not fileExists(srcFn):
     writeFile(srcFn, self.code)
-    self.curSolutionFn = srcFn
-    rc.setCurrentSrc(srcFn)
+  self.curSolutionFn = srcFn
+  rc.setCurrentSrc(srcFn)
 
 proc showSubmissionState*(jso: JsonNode) =
   let state = jso["state"].getStr
