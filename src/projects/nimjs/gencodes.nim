@@ -25,9 +25,9 @@ proc {TMPL_VAR_FUNCTION_NAME}({TMPL_VAR_PARAMETERS}): {TMPL_VAR_RETURN_TYPE} {{.
 
 proc getType(ts: string): string =
   case ts
-  of "integer", "double", "long": "cfloat"
-  of "character", "string": "cstring"
-  of "boolean": "bool"
+  of "integer", "double", "long": "JsNum"
+  of "character", "string": "JsStr"
+  of "boolean": "JsBool"
   else:
     if ts.endsWith("[]"):
       &"seq[{getType(ts[0 ..< ^2])}]"
@@ -64,8 +64,8 @@ proc genCode*(metaData: JsonNode): string =
 
 
 when isMainModule:
-  doAssert getType("double[]") == "seq[cfloat]"
-  doAssert getType("integer[][]") == "seq[seq[cfloat]]"
-  doAssert getType("list<character>") == "seq[cstring]"
-  doAssert getType("list<integer>") == "seq[cfloat]"
-  doAssert getType("list<list<integer>>") == "seq[seq[cfloat]]"
+  doAssert getType("double[]") == "seq[JsNum]"
+  doAssert getType("integer[][]") == "seq[seq[JsNum]]"
+  doAssert getType("list<character>") == "seq[JsStr]"
+  doAssert getType("list<integer>") == "seq[JsNum]"
+  doAssert getType("list<list<integer>>") == "seq[seq[JsNum]]"
