@@ -32,7 +32,9 @@ proc testCmd*(proj: BaseProject): bool =
   showCodeOutput(res)
 
   # Runtime Error
-  if not showRuntimeError(res): return
+  if showRuntimeError(res): return
+
+  discard showStatus(res)
 
   # compare output
   writeFile(proj.testMyOutputFn, getOutput(res["code_answer"]))

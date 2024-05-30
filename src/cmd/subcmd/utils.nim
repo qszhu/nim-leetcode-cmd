@@ -26,9 +26,9 @@ proc showCountDown*(seconds: float) =
   refreshEcho &"Starts in: {days} days, {hours} hours, {mins} minutes, {secs} seconds."
 
 proc showRuntimeError*(jso: JsonNode): bool =
-  result = jso["run_success"].getBool
-  if not result:
+  if "full_runtime_error" in jso:
     echo jso["full_runtime_error"].getStr
+    return true
 
 proc showStatus*(jso: JsonNode): string =
   result = jso["status_msg"].getStr

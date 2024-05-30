@@ -13,7 +13,7 @@ proc submitCmd*(proj: BaseProject): bool =
   let res = proj.submit(client)
 
   # Runtime Error
-  if not showRuntimeError(res): return
+  if showRuntimeError(res): return
 
   let status = showStatus(res)
   showPassedCases(res)
