@@ -14,7 +14,3 @@ type Language* = enum
 
 type SubmitLanguage* = enum
   JAVASCRIPT = "javascript"
-
-type Browser* = enum
-  FIREFOX = "firefox"
-  CHROME = "chrome"

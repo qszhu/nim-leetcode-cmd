@@ -2,7 +2,8 @@ import std/[
   strutils,
 ]
 
-import ../../lib/leetcode/lcClient
+import pkg/nimleetcode
+
 import ../../projects/projects
 import ../../nlccrcs
 import ../../consts

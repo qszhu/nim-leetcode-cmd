@@ -6,7 +6,8 @@ import std/[
   tables,
 ]
 
-import ../lib/leetcode/lcClient
+import pkg/nimleetcode
+
 import ../nlccrcs
 import ../projectrcs
 import ../consts

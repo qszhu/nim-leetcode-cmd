@@ -4,6 +4,8 @@ import std/[
   strutils,
 ]
 
+import pkg/nimleetcode
+
 import lib/rcs
 import consts
 

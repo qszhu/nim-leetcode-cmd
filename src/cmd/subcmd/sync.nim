@@ -1,5 +1,6 @@
+import pkg/nimleetcode
+
 import ../../nlccrcs
-import ../../lib/leetcode/lcSession
 
 
 

@@ -17,8 +17,9 @@ import std/[
   times,
 ]
 
+import pkg/[nimbrowsercookies, nimleetcode]
+
 import ../lib/[args, prompts]
-import ../lib/leetcode/lcSession
 import ../nlccrcs
 import ../consts
 import ../projects/projects

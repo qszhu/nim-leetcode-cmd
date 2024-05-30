@@ -6,7 +6,7 @@ import std/[
   uri,
 ]
 
-import consts
+import pkg/nimleetcode
 
 
 
