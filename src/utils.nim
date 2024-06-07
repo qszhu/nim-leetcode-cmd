@@ -23,11 +23,15 @@ proc getQuestionUrl*(contestSlug, questionSlug: string, host = "https://leetcode
   host.parseUri / "contest" / contestSlug / "problems" / (questionSlug & "/")
 
 proc openUrlInBrowser*(browser: Browser, uri: Uri) =
-  # TODO: other oses
   let cmd =
     case browser
     of Browser.CHROME:
-      &"open -a \"Google Chrome.app\" {uri}"
+      when defined macosx:
+        &"open -a \"Google Chrome.app\" {uri}"
+      elif defined windows:
+        &"powershell -c \"[system.Diagnostics.Process]::Start(\\\"chrome\\\",\\\"{uri}\\\") | out-null\""
+      else:
+        raise newException(ValueError, "Unsupported platform")
     else:
       raise newException(ValueError, "Unsupported browser: " & $browser)
   discard execShellCmd(cmd)

@@ -55,7 +55,7 @@ proc sync0(): bool =
 
   var profilePath = if force: "" else: nlccrc.getBrowserProfilePath
   if profilePath.len == 0:
-    let default = if browserOpt.get == Browser.CHROME: getDefaultChromeProfilePath() else: ""
+    let default = if browserOpt.get == Browser.CHROME: getChromeDefaultProfilePath() else: ""
     if not prompt("Browser profile path", profilePath, default): return
 
   if not syncCmd(browserOpt.get, profilePath): return
