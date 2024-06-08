@@ -6,7 +6,6 @@ In a new folder, run `nlcc`
 $ nlcc
 Choose browser [firefox|chrome] (chrome): [Enter]
 Browser profile path (/Users/whoami/Library/Application Support/Google/Chrome/Default): [Enter]
-/Users/whoami/Library/Application Support/Google/Chrome/Default/Cookies
 Choose language [nimjs|python3]: python3[Enter]
 第 132 场双周赛
 Starts in: 0 days, 4 hours, 16 minutes, 12 seconds.
@@ -14,7 +13,7 @@ Starts in: 0 days, 4 hours, 16 minutes, 12 seconds.
 
 # Browser profile paths
 
-If you have only one browser profile, the default profile path would do. Otherwise, find the profile path for the current profile:
+If you have only one browser profile, just accept the default profile path. Otherwise, find the profile path for the current profile:
 
 ## Chrome
 

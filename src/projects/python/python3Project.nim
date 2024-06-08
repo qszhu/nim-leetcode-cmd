@@ -46,3 +46,4 @@ method targetFn*(self: Python3Project): string {.inline.} =
 
 method build*(self: Python3Project): bool {.inline.} =
   copyFile(self.curSolutionFn, self.targetFn)
+  true
