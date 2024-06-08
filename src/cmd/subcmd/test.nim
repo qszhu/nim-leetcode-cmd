@@ -35,14 +35,14 @@ proc testCmd*(proj: BaseProject): bool =
   # Runtime Error
   if showRuntimeError(res): return
 
-  discard showStatus(res)
-
   # compare output
   writeFile(proj.testMyOutputFn, getOutput(res["code_answer"]))
   if not fileExists(proj.testOutputFn):
     proj.openInEditor(proj.testMyOutputFn)
   else:
     if not runDiff(proj.testOutputFn, proj.testMyOutputFn): return
+
+  discard showStatus(res)
 
   showRuntimeMemory(res)
 
