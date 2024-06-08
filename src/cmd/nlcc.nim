@@ -1,15 +1,3 @@
-#[
-* sync
-  * firefox [profile_path]
-  * chrome [cookies_db_path]
-* start <contest_slug | url>
-* new <problem_slug | n>
-* build <problem_slug | n>
-* test <problem_slug | n>
-* submit <problem_slug | n>
-* next
-* rank
-]#
 import std/[
   sequtils,
   strformat,

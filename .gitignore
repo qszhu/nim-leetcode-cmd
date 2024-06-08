@@ -1,8 +1,5 @@
 data/
 contests/
 bin/
-lib/
 .*rc
 *.tmpl
-TODO.md
-out.html
