@@ -72,8 +72,8 @@ proc initProject(info: ProjectInfo): BaseProject =
   case info.lang
   of Language.NIM_JS:
     initNimJsProject(info)
-  else:
-    raise newException(ValueError, "Unsupported language: " & $info.lang)
+  of Language.PYTHON3:
+    initPython3Project(info)
 
 proc getContestQuestionPageData(client: LcClient,
   contestSlug, titleSlug: string

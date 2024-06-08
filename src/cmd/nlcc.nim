@@ -141,8 +141,10 @@ proc initCurrentProject(): BaseProject =
     let proj = NimJsProject.new
     proj.initFromProject(contestSlug, questionSlug, lang, nlccrc.getCurrentQuestion)
     return proj
-  else:
-    raise newException(ValueError, "Unsupported language: " & $lang)
+  of Language.PYTHON3:
+    let proj = Python3Project.new
+    proj.initFromProject(contestSlug, questionSlug, lang, nlccrc.getCurrentQuestion)
+    return proj
 
 proc openCurrent(): bool =
   let proj = initCurrentProject()

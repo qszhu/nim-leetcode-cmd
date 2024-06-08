@@ -13,7 +13,7 @@ import ../projectrcs
 import ../consts
 import ../utils
 
-export os
+export os, tables
 
 
 
