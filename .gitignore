@@ -1,5 +1,6 @@
 data/
 contests/
 bin/
+dlls/
 .*rc
 *.tmpl

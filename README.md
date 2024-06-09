@@ -66,7 +66,7 @@ Add new implementations of [BaseProject](src/projects/baseProject.nim) to [src/p
 $ brew install mingw-w64 # OSX
 ```
 
-* Modify `nim.cfg` as needed.
+* Modify `config.nims` as needed.
 
 ## Build
 
