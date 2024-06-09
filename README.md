@@ -76,6 +76,7 @@ $ ./build.sh
 
 # TODO
 * Browsers and OSes
+
 | | Firefox | Chrome | Edge |
 | --- | --- | --- | --- |
 | Mac OS | ✔ | ✔ | ❌ |
