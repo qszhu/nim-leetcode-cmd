@@ -76,11 +76,11 @@ $ ./build.sh
 
 # TODO
 * Browsers and OSes
-|         | Firefox | Chrome | Edge |
-| ------- | ------- | ------ | ---- |
-| Mac OS  | ✔       |   ✔    | ❌   |
-| Windows |         |   ✔    |   ✔  |
-| Linux   |         |        |  ❌  |
+| | Firefox | Chrome | Edge |
+| --- | --- | --- | --- |
+| Mac OS | ✔ | ✔ | ❌ |
+| Windows | | ✔ | ✔ |
+| Linux | | | ❌ |
 * more langauges
   * [x] python
   * [ ] javascript
