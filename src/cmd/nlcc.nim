@@ -17,7 +17,7 @@ import subcmd/[start, sync, build, test, submit]
 
 
 
-const SESSION_EXPIRE_WARNING_SECS = 3 * 24 * 60 * 60
+const SESSION_EXPIRE_WARNING_SECS = 7 * 24 * 60 * 60
 
 proc showHelp(): int = discard
 proc initCurrentProject(): BaseProject
@@ -154,7 +154,7 @@ proc check(): bool =
 
   let lcSession = initJWT(session)
   if lcSession.getExpireTimestamp - getTime().toUnix <= SESSION_EXPIRE_WARNING_SECS:
-    echo &"Warning: Session expires at {lcSession.getExpireTime}. Consider refresh session in the browser and run \"nlcc sync\" again."
+    echo &"Warning: Session expires at {lcSession.getExpireTime}. Consider refreshing session (logout and login again) in the browser and run \"nlcc sync\" again."
 
   let langOpt = nlccrc.getLanguageOpt
   if langOpt.isNone:

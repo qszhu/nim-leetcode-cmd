@@ -17,11 +17,13 @@ If you have only one browser profile, just accept the default profile path. Othe
 
 ## Chrome
 
-Type `chrome://version` in the address bar.
+* Type `chrome://version` in the address bar.
+* Copy the value of `Profile Path` (`个人资料路径`).
 
 ## Firefox
 
-Type `about://profiles` in the address bar.
+* Type `about://profiles` in the address bar.
+* Copy the value of `Root Directory`.
 
 # Commands
 
@@ -40,7 +42,7 @@ $ nlcc sync # sync cookies from browser (e.g. if the cookies expired and you nee
 
 # Code templates
 
-There would be a default `.tmpl` template file created in the current folder. Change the file as needed (i.e. adding imports, code snippets, etc.), but leave the `{{` and `}}` quoted template variables intact.
+There would be a default `.tmpl` template file created in the current folder. Change the file as needed (i.e. adding imports, code snippets, etc.), but leave the template variables intact.
 
 # Editor
 
@@ -88,10 +90,10 @@ $ ./build.sh
       * macos
         * get key from keyring
         * derive key with pbkdf2: [pbkdf.nim](https://github.com/qszhu/nimtestcrypto/blob/main/src/nimtestcrypto/pbkdf.nim)
-        * decrypt with aes-128-cbc: [aes.nim](https://github.com/qszhu/nimtestcrypto/blob/main/src/nimtestcrypto/aes.nim)
+        * decrypt value with aes-128-cbc: [aes.nim](https://github.com/qszhu/nimtestcrypto/blob/main/src/nimtestcrypto/aes.nim)
       * windows
         * decrypt key with dpapi: [dpapi.nim](https://github.com/qszhu/nimbrowsercookies/blob/main/src/nimbrowsercookies/dpapi.nim)
-        * decrypt with aes-256-gcm: [aes.nim](https://github.com/qszhu/nimtestcrypto/blob/main/src/nimtestcrypto/aes.nim)
+        * decrypt value with aes-256-gcm: [aes.nim](https://github.com/qszhu/nimtestcrypto/blob/main/src/nimtestcrypto/aes.nim)
     * crypto: [nimtestcrypto](https://github.com/qszhu/nimtestcrypto)
   * parse javascript page data in html: [pageData.nim](https://github.com/qszhu/nimleetcode/blob/main/src/nimleetcode/pageData.nim)
     * parser combinator: [nimparsec](https://github.com/qszhu/nimparsec)
