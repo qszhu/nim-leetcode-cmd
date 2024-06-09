@@ -95,7 +95,7 @@ $ ./build.sh
 * [ ] support for multiple browser profiles
 * [ ] display realtime contest ratings
 * [ ] compatibility for old folder structure
-  * [ ] compatibility with old code template
+  * [x] compatibility with old code template
 * [ ] update self
 
 # Implementation details

@@ -23,11 +23,12 @@ type
     titleSlug*: string
     questionId*: string
     lang*: Language
+    order*: int
 
     testInput*: string
     codeSnippets*: Table[string, string]
     metaData*: JsonNode
-    order*: int
+    problemDesc*, problemDescEn*: string
 
 type
   BaseProject* = ref object of RootObj

@@ -143,10 +143,12 @@ proc startCmd*(contestSlug: string): bool =
       titleSlug: q.titleSlug,
       questionId: $q.questionId,
       lang: langOpt.get,
+      order: i + 1,
       testInput: testInput,
       codeSnippets: snippets,
       metaData: metaData,
-      order: i + 1,
+      problemDesc: res["questionContent"].getStr,
+      problemDescEn: res["questionSourceContent"].getStr,
     ))
     proj.initProjectDir
 
