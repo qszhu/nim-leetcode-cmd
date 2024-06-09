@@ -32,6 +32,11 @@ proc openUrlInBrowser*(browser: Browser, uri: Uri) =
         &"powershell -c \"[system.Diagnostics.Process]::Start(\\\"chrome\\\",\\\"{uri}\\\") | out-null\""
       else:
         raise newException(ValueError, "Unsupported platform")
+    of Browser.EDGE:
+      when defined windows:
+        &"powershell -c \"[system.Diagnostics.Process]::Start(\\\"msedge\\\",\\\"{uri}\\\") | out-null\""
+      else:
+        raise newException(ValueError, "Unsupported platform")
     else:
       raise newException(ValueError, "Unsupported browser: " & $browser)
   discard execShellCmd(cmd)

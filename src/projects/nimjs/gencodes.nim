@@ -1,7 +1,6 @@
 import std/[
   json,
   os,
-  re,
   strformat,
   strutils,
 ]
@@ -31,8 +30,8 @@ proc getType(ts: string): string =
   else:
     if ts.endsWith("[]"):
       &"seq[{getType(ts[0 ..< ^2])}]"
-    elif ts =~ re"list<(.+)>":
-      let ts = matches[0]
+    elif ts.startsWith("list<") and ts.endsWith(">"):
+      let ts = ts[5 ..< ^1]
       &"seq[{getType(ts)}]"
     else: ts
 

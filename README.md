@@ -1,10 +1,12 @@
-# Run
+# Getting started
 
-In a new folder, run `nlcc`
+* Login in your preferred browser (Chrome/Edge/Firefox).
+* Close the browser and make sure no browser processes are running.
+* In a new folder, run `nlcc`:
 
 ```bash
 $ nlcc
-Choose browser [firefox|chrome] (chrome): [Enter]
+Choose browser [firefox|chrome|edge] (chrome): [Enter]
 Browser profile path (/Users/whoami/Library/Application Support/Google/Chrome/Default): [Enter]
 Choose language [nimjs|python3]: python3[Enter]
 第 132 场双周赛
@@ -20,10 +22,15 @@ If you have only one browser profile, just accept the default profile path. Othe
 * Type `chrome://version` in the address bar.
 * Copy the value of `Profile Path` (`个人资料路径`).
 
+## Edge
+
+* Type `edge://version` in the address bar.
+* Copy the value of `Profile Path` (`个人资料路径`).
+
 ## Firefox
 
 * Type `about://profiles` in the address bar.
-* Copy the value of `Root Directory`.
+* Copy the value of `Root Directory` of the desired profile.
 
 # Commands
 
@@ -68,6 +75,12 @@ $ ./build.sh
 ```
 
 # TODO
+* Browsers and OSes
+|         | Firefox | Chrome | Edge |
+| ------- | ------- | ------ | ---- |
+| Mac OS  | ✔       |   ✔    | ❌   |
+| Windows |         |   ✔    |   ✔  |
+| Linux   |         |        |  ❌  |
 * more langauges
   * [x] python
   * [ ] javascript
@@ -81,6 +94,8 @@ $ ./build.sh
 * [ ] support for multiple browser profiles
 * [ ] display realtime contest ratings
 * [ ] compatibility for old folder structure
+  * [ ] compatibility with old code template
+* [ ] update self
 
 # Implementation details
 
