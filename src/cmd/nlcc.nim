@@ -129,13 +129,12 @@ proc initCurrentProject(): BaseProject =
   let lang = langOpt.get
   case lang
   of Language.NIM_JS:
-    let proj = NimJsProject.new
-    proj.initFromProject(contestSlug, questionSlug, lang, nlccrc.getCurrentQuestion)
-    return proj
+    result = NimJsProject.new
+  of Language.NIM_WASM:
+    result = NimWasmProject.new
   of Language.PYTHON3:
-    let proj = Python3Project.new
-    proj.initFromProject(contestSlug, questionSlug, lang, nlccrc.getCurrentQuestion)
-    return proj
+    result = Python3Project.new
+  result.initFromProject(contestSlug, questionSlug, lang, nlccrc.getCurrentQuestion)
 
 proc openCurrent(): bool =
   let proj = initCurrentProject()

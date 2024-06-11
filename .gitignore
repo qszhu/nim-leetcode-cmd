@@ -2,5 +2,6 @@ data/
 contests/
 bin/
 dlls/
+lib/
+tmpl/
 .*rc
-*.tmpl

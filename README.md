@@ -66,7 +66,7 @@ Add new implementations of [BaseProject](src/projects/baseProject.nim) to [src/p
 $ brew install mingw-w64 # OSX
 ```
 
-* Modify `config.nims` as needed.
+* Modify `nim.cfg` as needed.
 
 ## Build
 
@@ -97,6 +97,8 @@ $ ./build.sh
 * [ ] compatibility for old folder structure
   * [x] compatibility with old code template
 * [ ] update self
+* [ ] list problems and choose one
+* [ ] open file and set cursor in code template
 
 # Implementation details
 

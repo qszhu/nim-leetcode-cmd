@@ -4,6 +4,7 @@ import std/[
 ]
 
 import ../baseProject
+import ../utils
 import gencodes
 import ../../consts
 
@@ -25,9 +26,6 @@ method srcFileExt*(self: NimJsProject): string =
 
 method targetFn*(self: NimJsProject): string =
   self.buildDir / "solution.js"
-
-proc checkCmd(cmd: string): bool {.inline.} =
-  execShellCmd(&"which {cmd}") == 0
 
 const TARGET = "node20.10.0"
 
