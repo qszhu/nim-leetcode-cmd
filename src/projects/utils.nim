@@ -6,4 +6,7 @@ import std/[
 
 
 proc checkCmd*(cmd: string): bool {.inline.} =
-  execShellCmd(&"which {cmd}") == 0
+  when defined windows:
+    return execShellCmd(&"powershell -c \"Get-Command {cmd}\"") == 0
+  else:
+    return execShellCmd(&"which {cmd}") == 0
