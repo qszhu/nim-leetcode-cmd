@@ -53,3 +53,6 @@ proc getArg*(self: Argument, idx: int, default = ""): string {.inline.} =
 
 proc getOption*(self: Argument, key: string, default = ""): string {.inline.} =
   self.options.getOrDefault(key, default)
+
+proc hasOption*(self: Argument, key: string): bool {.inline.} =
+  key in self.options

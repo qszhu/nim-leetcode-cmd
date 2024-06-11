@@ -1,4 +1,5 @@
 import std/[
+  json,
   os,
 ]
 
@@ -10,6 +11,7 @@ const CFG_FN = ".projectrc"
 
 const KEY_QUESTION_ID = "questionId"
 const KEY_CURRENT_SRC = "currentSrc"
+const KEY_META_DATA = "metaData"
 
 
 
@@ -30,3 +32,9 @@ proc setCurrentSrc*(self: ProjectRC, v: string) {.inline.} =
 
 proc getCurrentSrc*(self: ProjectRC): string {.inline.} =
   self.get(KEY_CURRENT_SRC)
+
+proc setMetaData*(self: ProjectRC, m: JsonNode) {.inline.} =
+  self.set(KEY_META_DATA, $m)
+
+proc getMetaData*(self: ProjectRC): JsonNode {.inline.} =
+  self.get(KEY_META_DATA).parseJson

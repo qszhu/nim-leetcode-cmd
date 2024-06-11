@@ -1,0 +1,11 @@
+const fs = require('fs')
+let lines = fs.readFileSync(0)
+
+let inst = Module()
+let buf = inst._malloc(lines.length)
+inst.HEAPU8.set(lines, buf)
+
+let resBuf = inst.ccall('solve', 'number', ['number'], [buf])
+let output = inst.UTF8ToString(resBuf)
+fs.writeFileSync("user.out", output)
+process.exit(0)

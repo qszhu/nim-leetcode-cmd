@@ -1,0 +1,31 @@
+import ../../../../../lib/nimwasm/types
+
+var
+  s: string
+  res: int
+
+proc init() =
+  discard
+
+proc solve() =
+  # TODO
+  discard
+
+proc output(): string =
+  $res
+
+proc main(lines: cstring): cstring {.exportc: "solve".} =
+  init()
+  let
+    reader = newReader(lines)
+    writer = newWriter()
+
+  while reader.hasNext:
+    s = reader.readString
+    solve()
+    writer.write output()
+
+  writer.toCString
+
+when isMainModule:
+  echo $(main(stdin.readAll.cstring))

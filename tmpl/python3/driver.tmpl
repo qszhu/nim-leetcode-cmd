@@ -1,0 +1,69 @@
+# coding: utf-8
+from string import *
+from re import *
+from datetime import *
+from collections import *
+from heapq import *
+from bisect import *
+from copy import *
+from math import *
+from random import *
+from statistics import *
+from itertools import *
+from functools import *
+from operator import *
+from io import *
+from sys import *
+from json import *
+from builtins import *
+
+import string
+import re
+import datetime
+import collections
+import heapq
+import bisect
+import copy
+import math
+import random
+import statistics
+import itertools
+import functools
+import operator
+import io
+import sys
+import json
+
+import precompiled.__settings__
+from precompiled.__deserializer__ import __Deserializer__
+from precompiled.__deserializer__ import DeserializeError
+from precompiled.__serializer__ import __Serializer__
+from precompiled.__utils__ import __Utils__
+from precompiled.listnode import ListNode
+from precompiled.nestedinteger import NestedInteger
+from precompiled.treenode import TreeNode
+
+from typing import *
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+# user submitted code insert below
+${code}
+import sys
+import os
+import orjson as json
+from precompiled.__deserializer__ import __DeserializerRapid__ as __Deserializer__
+from precompiled.__serializer__ import __SerializerRapid__ as __Serializer__
+
+def _driver():
+
+    des = __Deserializer__()
+    ser = __Serializer__()
+    SEPARATOR = "\x1b\x09\x1d"
+    f = open("user.out", "wb", 0)
+    lines = __Utils__().read_lines()
+
+${driverLoop}
+
+if __name__ == '__main__':
+    _driver()

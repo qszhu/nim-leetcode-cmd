@@ -11,6 +11,7 @@ const CMD_LANG* = "lang"
 const OPT_BROWSER* = "browser"
 const OPT_PROFILE* = "profile"
 const OPT_FORCE* = "force"
+const OPT_LOCAL* = "local"
 
 const STATUS_ACCEPTED* = "Accepted"
 const STATUS_WRONG_ANSWER* = "Wrong Answer"

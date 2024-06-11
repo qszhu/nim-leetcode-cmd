@@ -24,7 +24,16 @@ proc runDiff(fa, fb: string): bool =
       .replace(TMPL_VAR_DIFF_B, fb)
     discard execShellCmd(cmd)
 
-proc testCmd*(proj: BaseProject): bool =
+proc testCmd*(proj: BaseProject, local = false): bool =
+  if local:
+    proj.localTest
+
+    if not fileExists(proj.testOutputFn):
+      proj.openInEditor(proj.testMyOutputFn)
+    else:
+      if not runDiff(proj.testOutputFn, proj.testMyOutputFn): return
+    return true
+
   let client = newLcClient()
   client.setToken(nlccrc.getLeetCodeSession)
 

@@ -21,10 +21,10 @@ proc initNimJsProject*(info: ProjectInfo): NimJsProject =
 method submitLang*(self: NimJsProject): SubmitLanguage {.inline.} =
   SubmitLanguage.JAVASCRIPT
 
-method srcFileExt*(self: NimJsProject): string =
+method srcFileExt*(self: NimJsProject): string {.inline.} =
   "nim"
 
-method targetFn*(self: NimJsProject): string =
+method targetFn*(self: NimJsProject): string {.inline.} =
   self.buildDir / "solution.js"
 
 const TARGET = "node20.10.0"

@@ -13,7 +13,7 @@ import ../projectrcs
 import ../consts
 import ../utils
 
-export os, tables
+export os, tables, json
 
 
 
@@ -24,10 +24,10 @@ type
     questionId*: string
     lang*: Language
     order*: int
+    metaData*: JsonNode
 
     testInput*: string
     codeSnippets*: Table[string, string]
-    metaData*: JsonNode
     problemDesc*, problemDescEn*: string
 
 type
@@ -48,16 +48,19 @@ method init*(self: BaseProject, info: ProjectInfo) {.base, inline.} =
   self.info = info
 
 method submitLang*(self: BaseProject): SubmitLanguage {.base, inline.} =
-  raise newException(CatchableError, "Not implemented")
+  raise newException(CatchableError, "Not implemented: submitLang")
 
 method srcFileExt*(self: BaseProject): string {.base, inline.} =
-  raise newException(CatchableError, "Not implemented")
+  raise newException(CatchableError, "Not implemented: srcFileExt")
 
 method targetFn*(self: BaseProject): string {.base, inline.} =
-  raise newException(CatchableError, "Not implemented")
+  raise newException(CatchableError, "Not implemented: targetFn")
 
-method build*(self: BaseProject): bool {.base, inline.} =
-  raise newException(CatchableError, "Not implemented")
+method build*(self: BaseProject): bool {.base.} =
+  raise newException(CatchableError, "Not implemented: build")
+
+method localTest*(self: BaseProject) {.base.} =
+  raise newException(CatchableError, "Not implemented: localTest")
 
 method rootDir*(self: BaseProject): string {.base, inline.} =
   if self.info.order == 0:
@@ -105,6 +108,7 @@ method initProjectDir*(self: BaseProject) {.base.} =
 
   let rc = initProjectRC(self.rootDir)
   rc.setQuestionId(self.info.questionId)
+  rc.setMetaData(self.info.metaData)
 
   if not fileExists(self.testInputFn) and self.info.testInput.len > 0:
     writeFile(self.testInputFn, self.info.testInput)
@@ -154,5 +158,6 @@ method initFromProject*(self: BaseProject, contestSlug, titleSlug: string, lang:
     questionId: rc.getQuestionId,
     lang: lang,
     order: order,
+    metaData: rc.getMetaData,
   ))
   self.curSolutionFn = rc.getCurrentSrc

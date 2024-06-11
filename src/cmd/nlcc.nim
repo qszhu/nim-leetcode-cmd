@@ -28,7 +28,7 @@ proc sync0(): bool =
     .addOption(OPT_FORCE, "f")
     .parse
 
-  let force = args.getOption(OPT_FORCE) == "1"
+  let force = args.hasOption(OPT_FORCE)
 
   var browserOpt = if force: none(Browser) else: nlccrc.getBrowserOpt
   if browserOpt.isNone:
@@ -71,8 +71,14 @@ proc build0(): bool =
   buildCmd(proj)
 
 proc test0(): bool =
+  let args = initArgs()
+    .addOption(OPT_LOCAL, "l")
+    .parse
+
+  let local = args.hasOption(OPT_LOCAL)
+
   let proj = initCurrentProject()
-  testCmd(proj)
+  testCmd(proj, local)
 
 proc next0(): bool =
   let questions = nlccrc.getContestQuestions

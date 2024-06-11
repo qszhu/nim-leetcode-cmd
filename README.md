@@ -8,7 +8,7 @@
 $ nlcc
 Choose browser [firefox|chrome|edge] (chrome): [Enter]
 Browser profile path (/Users/whoami/Library/Application Support/Google/Chrome/Default): [Enter]
-Choose language [nimjs|python3]: python3[Enter]
+Choose language [nimjs|nimwasm|python3]: python3[Enter]
 第 132 场双周赛
 Starts in: 0 days, 4 hours, 16 minutes, 12 seconds.
 ```
@@ -49,17 +49,33 @@ $ nlcc sync # sync cookies from browser (e.g. if the cookies expired and you nee
 
 # Code templates
 
-There would be a default `.tmpl` template file created in the current folder. Change the file as needed (i.e. adding imports, code snippets, etc.), but leave the template variables intact.
+Code templates reside in respective folders in `tmpl`. Change the templates as needed (i.e. adding imports, code snippets, etc.), but leave the template variables intact.
 
 # Editor
 
 Visual Studio Code is hard-coded as the code editor and diff tool at the moment. May be configurable in the future.
+
+# Local test (Experimental)
+
+## Python3
+
+* Make sure python3.11 is on the `$PATH`:
+```bash
+$ python3.11 --version
+Python 3.11.9
+```
+* Install requirements
+```bash
+$ python3.11 -m pip install precompiled/python3/requirements.txt
+```
+* Use `nlcc test -l` instead of `nlcc test` to test locally
 
 # Develop
 
 ## New language support
 
 Add new implementations of [BaseProject](src/projects/baseProject.nim) to [src/projects/](src/projects/). For example [Python3Project](src/projects/python/python3Project.nim). Pull requests are welcome.
+
 ## [Cross-compilation for windows](https://nim-lang.github.io/Nim/nimc.html#crossminuscompilation-for-windows)
 
 ```bash
@@ -67,8 +83,7 @@ $ brew install mingw-w64 # OSX
 ```
 
 * Modify `nim.cfg` as needed.
-
-## Build
+* Build
 
 ```bash
 $ ./build.sh
@@ -79,18 +94,22 @@ $ ./build.sh
 
 | | Firefox | Chrome | Edge |
 | --- | --- | --- | --- |
-| Mac OS | ✔ | ✔ | ❌ |
-| Windows | | ✔ | ✔ |
+| Mac OS | ✅ | ✅ | ❌ |
+| Windows | | ✅ | ✅ |
 | Linux | | | ❌ |
 * more langauges
   * [x] python
   * [ ] javascript
   * [ ] typescript
   * [ ] java
+  * [ ] kotlin
   * [ ] cpp
+  * [ ] go
+  * [ ] rust
 * [ ] extract sample outputs from problem description
 * [ ] generate test cases according to problem description
-* [ ] test solutions locally
+* test solutions locally
+  * [x] python
 * [ ] support for global site
 * [ ] support for multiple browser profiles
 * [ ] display realtime contest ratings

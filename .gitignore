@@ -1,7 +1,5 @@
 data/
 contests/
-bin/
-dlls/
+build/
 lib/
-tmpl/
 .*rc
