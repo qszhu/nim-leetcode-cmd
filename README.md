@@ -59,15 +59,14 @@ Visual Studio Code is hard-coded as the code editor and diff tool at the moment.
 
 ## Python3
 
-* Make sure python3.11 is on the `$PATH`:
-  * On Windows, you can use `(Get-Command python).path` to find the executable path.
+* Make sure python 3.11 is on the `$PATH`:
 ```bash
-$ python3.11 --version
+$ python -V
 Python 3.11.9
 ```
 * Install requirements
 ```bash
-$ python3.11 -m pip install precompiled/python3/requirements.txt
+$ python -m pip install -r precompiled/python3/requirements.txt
 ```
   * On Windows, also install [Latest Microsoft Visual C++ Redistributable Version](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)
 * Use `nlcc test -l` instead of `nlcc test` to test locally

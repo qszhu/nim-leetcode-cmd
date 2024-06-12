@@ -96,8 +96,8 @@ proc genDriverLoop(metaData: JsonNode): string =
 """
 
 method localTest*(self: Python3Project) =
-  if not checkCmd("python3.11"):
-    echo "Missing python3.11"
+  if not checkCmd("python"):
+    echo "Missing python"
     return
 
   let code = readFile(self.targetFn)
@@ -109,7 +109,7 @@ method localTest*(self: Python3Project) =
   let wd = "precompiled" / "python3"
   writeFile(wd / "driver.py", driverCode)
 
-  let cmd = &"""cd {wd} && python3.11 driver.py -recursion_limit 550000 < {self.testInputFn.absolutePath}"""
+  let cmd = &"""cd {wd} && python driver.py -recursion_limit 550000 < {self.testInputFn.absolutePath}"""
   echo cmd
   if execShellCmd(cmd) != 0: return
   copyFile(wd / "user.out", self.testMyOutputFn)
