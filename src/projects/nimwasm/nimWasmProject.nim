@@ -70,3 +70,13 @@ method build*(self: NimWasmProject): bool =
     writeFile(self.targetFn, content)
 
   true
+
+method localTest*(self: NimWasmProject) =
+  if not checkCmd("node"):
+    echo "Missing node"
+    return
+
+  let cmd = &"""node {self.targetFn} < {self.testInputFn}"""
+  echo cmd
+  if execShellCmd(cmd) != 0: return
+  moveFile("user.out", self.testMyOutputFn)

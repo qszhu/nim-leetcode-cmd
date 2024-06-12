@@ -111,6 +111,8 @@ $ ./build.sh
 * [ ] generate test cases according to problem description
 * test solutions locally
   * [x] python
+  * [x] nimWasm
+  * [ ] docker env
 * [ ] support for global site
 * [ ] support for multiple browser profiles
 * [ ] display realtime contest ratings
