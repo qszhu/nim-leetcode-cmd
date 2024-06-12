@@ -78,6 +78,17 @@ method getFileContent(self: Python3Puller, fn: string): Future[string] {.async.}
 method getDriverFn(self: Python3Puller): string {.inline.} =
   "__file__"
 
+proc getInstalledPkgs(self: Python3Puller): Future[seq[string]] {.async.} =
+  let code = """
+        import pkg_resources
+        installed_packages = pkg_resources.working_set
+        installed_packages_list = sorted(["%s==%s" % (i.key, i.version) for i in installed_packages])
+        for pkg in installed_packages_list:
+            print(pkg)
+"""
+  let outputs = await self.client.runPython3Code(code)
+  outputs.mapIt(it.getStr)
+
 
 
 proc runJavascriptCode(client: LcClient, code: string): Future[JsonNode] {.async.} =
@@ -164,6 +175,12 @@ when isMainModule:
   let client = newLcClient()
   client.setToken(nlccrc.getLeetCodeSession)
 
-  let lang = "python3"
-  # let lang = "javascript"
-  waitFor client.pullPrecompiled(lang)
+  when true:
+    let lang = "python3"
+    # let lang = "javascript"
+    waitFor client.pullPrecompiled(lang)
+
+  when false:
+    let puller = newPython3Puller(client)
+    let pkgs = waitFor puller.getInstalledPkgs
+    writeFile("docker" / "python3" / "requirements.txt", pkgs.join("\n"))
