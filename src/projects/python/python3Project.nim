@@ -96,8 +96,8 @@ proc genDriverLoop(metaData: JsonNode): string =
 """
 
 method localTest*(self: Python3Project) =
-  if not checkCmd("python"):
-    echo "Missing python"
+  if not checkCmd("docker"):
+    echo "Missing docker"
     return
 
   let code = readFile(self.targetFn)
@@ -106,13 +106,18 @@ method localTest*(self: Python3Project) =
   let driverCode = tmpl
     .replace(TMPL_VAR_CODE, code)
     .replace(TMPL_VAR_DRIVER_LOOP, driverLoop)
-  let wd = "precompiled" / "python3"
-  writeFile(wd / "driver.py", driverCode)
+  let driverFn = self.buildDir / "driver.py"
+  writeFile(driverFn, driverCode)
+  writeFile(self.testMyOutputFn, "")
 
-  let cmd = &"""cd {wd} && python driver.py -recursion_limit 550000 < {self.testInputFn.absolutePath}"""
+  let cmd = &"""docker run --rm \
+  -v {driverFn.absolutePath}:/usr/app/driver.py \
+  -v {self.testInputFn.absolutePath}:/usr/app/input \
+  -v {self.testMyOutputFn.absolutePath}:/usr/app/user.out \
+  lcpython3.11 sh -c "python driver.py -recursion_limit 550000 < input"
+"""
   echo cmd
   if execShellCmd(cmd) != 0: return
-  copyFile(wd / "user.out", self.testMyOutputFn)
 
 
 

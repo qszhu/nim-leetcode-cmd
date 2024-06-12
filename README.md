@@ -58,17 +58,10 @@ Visual Studio Code is hard-coded as the code editor and diff tool at the moment.
 # Local test (Experimental)
 
 ## Python3
-
-* Make sure python 3.11 is on the `$PATH`:
+* import docker image
 ```bash
-$ python -V
-Python 3.11.9
+$ docker load < lcpython3.11_latest.tar.gz
 ```
-* Install requirements
-```bash
-$ python -m pip install -r precompiled/python3/requirements.txt
-```
-  * On Windows, also install [Latest Microsoft Visual C++ Redistributable Version](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)
 * Use `nlcc test -l` instead of `nlcc test` to test locally
 
 # Develop
@@ -111,8 +104,10 @@ $ ./build.sh
 * [ ] generate test cases according to problem description
 * test solutions locally
   * [x] python
-  * [x] nimWasm
-  * [ ] docker env
+* docker env
+  * [x] python
+  * [ ] javascript
+  * [ ] limit memory and runtime
 * [ ] support for global site
 * [ ] support for multiple browser profiles
 * [ ] display realtime contest ratings
