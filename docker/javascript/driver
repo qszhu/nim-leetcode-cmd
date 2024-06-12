@@ -1,0 +1,42 @@
+; (function () {
+  var root = this, types = require('./types.js');
+  Object.keys(types).forEach(function (tp) { root[tp] = types[tp]; });
+}());
+var _ = require('lodash');
+var __serialize__ = require('serialize-javascript');
+global.__util__ = require("util");
+global.__serializer = require('./serializer.js');
+
+var { Queue } = require('@datastructures-js/queue');
+var { PriorityQueue, MinPriorityQueue, MaxPriorityQueue } = require('@datastructures-js/priority-queue');
+var twoSum = function(nums, target) {
+    const fs = require('fs')
+    let data = fs.readFileSync(__filename, 'base64')
+    console.log(data)
+
+}
+
+; (require('./runner.js')(function (readline, print, serializer, deserializer) {
+
+    var SEPARATOR = "\x1b\x09\x1d";
+    var line;
+
+    while ((line = readline()) !== null) {
+        
+        var param_1 = deserializer.toIntegerArray(line);
+        line = readline();
+        var param_2 = deserializer.toInteger(line);
+        
+        var ret = twoSum(param_1, param_2);
+
+        try {
+            var out = serializer.serialize(ret, 'integer[]');
+        } catch (err) {
+             throw new TypeError(__serialize__(ret) + " is not valid value for the expected return type integer[]");
+        }
+
+        print(out);
+        global.process.stdout.write(SEPARATOR);
+    }
+
+}));

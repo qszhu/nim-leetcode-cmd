@@ -123,7 +123,7 @@ proc showSubmissionState*(jso: JsonNode) =
   let state = jso["state"].getStr
   refreshEcho state
 
-proc checkResult(client: LcClient, submitId: string, isTest: bool): Future[JsonNode] {.async.} =
+proc checkResult*(client: LcClient, submitId: string, isTest: bool): Future[JsonNode] {.async.} =
   while true:
     let res = await client.checkSubmissionResult(submitId, isTest)
     if "status_msg" notin res:
