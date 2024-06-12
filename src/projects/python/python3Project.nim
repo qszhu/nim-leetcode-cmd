@@ -55,11 +55,20 @@ method build*(self: Python3Project): bool =
   copyFile(self.curSolutionFn, self.targetFn)
   true
 
-proc genParam(i: int, typ: string): string {.inline.} =
-  &"""
+proc genParam(i: int, name, typ: string): string {.inline.} =
+  let i = i + 1
+  if i == 1:
+    &"""
         line = next(lines, None)
         if line == None:
           break
+        param_{i} = des._deserialize(line, '{typ}')
+"""
+  else:
+    &"""
+        line = next(lines, None)
+        if line == None:
+            raise Exception("Testcase does not have enough input arguments. Expected argument '{name}'")
         param_{i} = des._deserialize(line, '{typ}')
 """
 
@@ -81,7 +90,7 @@ proc genDriverLoop(metaData: JsonNode): string =
   let params = metaData["params"].getElems
   var getParams = newSeq[string]()
   for i, param in params:
-    getParams.add genParam(i + 1, param["type"].getStr)
+    getParams.add genParam(i, param["name"].getStr, param["type"].getStr)
   let getParamsCode = getParams.join("\n")
   let callCode = genCall(metaData["name"].getStr, metaData["params"].len)
   let returnCode = genReturn(metaData["return"]["type"].getStr)
