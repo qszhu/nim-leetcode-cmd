@@ -107,9 +107,10 @@ $ ./build.sh
 * [ ] generate test cases according to problem description
 * test solutions locally
   * [x] python
+  * [x] nimwasm
 * docker env
   * [x] python
-  * [x] javascript
+  * [-] javascript
   * [ ] limit memory and runtime
 * [ ] support for global site
 * [ ] support for multiple browser profiles
@@ -135,3 +136,8 @@ $ ./build.sh
     * crypto: [nimtestcrypto](https://github.com/qszhu/nimtestcrypto)
   * parse javascript page data in html: [pageData.nim](https://github.com/qszhu/nimleetcode/blob/main/src/nimleetcode/pageData.nim)
     * parser combinator: [nimparsec](https://github.com/qszhu/nimparsec)
+* pull precompiled files: [pullPrecompiled.nim](src/scripts/pullPrecompiled.nim)
+* compile nim to javascript: [nimJsProject.nim](src/projects/nimjs/nimJsProject.nim)
+* compile nim to wasm: [nimWasmProject.nim](src/projects/nimwasm/nimWasmProject.nim)
+  * build command: [build.tmpl](tmpl/nimwasm/build.tmpl)
+  * handle IO: [post.tmpl](tmpl/nimwasm/post.tmpl)
