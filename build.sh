@@ -10,3 +10,4 @@ cp -r tmpl build/
 cp -r dlls build/
 
 docker save lcpython3.11:latest | gzip > build/lcpython3.11_latest.tar.gz
+docker save lcnodejs20.10.0:latest | gzip > build/lcnodejs20.10.0_latest.tar.gz

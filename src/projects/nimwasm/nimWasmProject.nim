@@ -37,17 +37,9 @@ method targetFn*(self: NimWasmProject): string {.inline.} =
   self.buildDir / "solution.js"
 
 method build*(self: NimWasmProject): bool =
-  if not checkCmd("nim"):
-    echo "Missing nim"
-    return
-
-  if not checkCmd("emcc"):
-    echo "Missing emcc"
-    return
-
-  if not checkCmd("esbuild"):
-    echo "Missing esbuild"
-    return
+  checkCmd("nim")
+  checkCmd("emcc")
+  checkCmd("esbuild")
 
   block:
     let cmd = readFile(TMPL_BUILD_FN)
@@ -72,11 +64,16 @@ method build*(self: NimWasmProject): bool =
   true
 
 method localTest*(self: NimWasmProject) =
-  if not checkCmd("node"):
-    echo "Missing node"
-    return
+  checkCmd("docker")
 
-  let cmd = &"""node {self.targetFn} < {self.testInputFn}"""
+  let driverFn = self.targetFn
+  writeFile(self.testMyOutputFn, "")
+
+  let cmd = &"""docker run --rm \
+  -v {driverFn.absolutePath}:/usr/app/driver.js \
+  -v {self.testInputFn.absolutePath}:/usr/app/input \
+  -v {self.testMyOutputFn.absolutePath}:/usr/app/user.out \
+  lcnodejs20.10.0 sh -c "node --harmony driver.js < input"
+"""
   echo cmd
   if execShellCmd(cmd) != 0: return
-  moveFile("user.out", self.testMyOutputFn)

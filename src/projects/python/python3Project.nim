@@ -105,9 +105,7 @@ proc genDriverLoop(metaData: JsonNode): string =
 """
 
 method localTest*(self: Python3Project) =
-  if not checkCmd("docker"):
-    echo "Missing docker"
-    return
+  checkCmd("docker")
 
   let code = readFile(self.targetFn)
   let driverLoop = genDriverLoop(self.info.metaData)

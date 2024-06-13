@@ -30,18 +30,14 @@ method targetFn*(self: NimJsProject): string {.inline.} =
 const TARGET = "node20.10.0"
 
 method build*(self: NimJsProject): bool =
-  if not checkCmd("nim"):
-    echo "Missing nim"
-    return
+  checkCmd("nim")
 
   block:
     let cmd = &"nim js -d:nodejs -d:danger -o:{self.targetFn} {self.curSolutionFn}"
     echo cmd
     if execShellCmd(cmd) != 0: return
 
-  if not checkCmd("esbuild"):
-    echo "Missing esbuild"
-    return
+  checkCmd("esbuild")
 
   block:
     let cmd = &"esbuild {self.targetFn} --minify=true --platform=node --target={TARGET} --outfile={self.targetFn} --allow-overwrite"
