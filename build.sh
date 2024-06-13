@@ -9,5 +9,5 @@ nim c -d:mingw --cpu:amd64 -f -d:$BUILD -o:build/win/nlcc.exe src/cmd/nlcc.nim
 cp -r tmpl build/
 cp -r dlls build/
 
-docker save lcpython3.11:latest | gzip > build/lcpython3.11_latest.tar.gz
-docker save lcnodejs20.10.0:latest | gzip > build/lcnodejs20.10.0_latest.tar.gz
+cd docker/python3 && ./build.sh && cd -
+cd docker/javascript && ./build.sh && cd -
