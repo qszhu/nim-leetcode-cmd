@@ -69,11 +69,11 @@ method localTest*(self: NimWasmProject) =
   let driverFn = self.targetFn
   writeFile(self.testMyOutputFn, "")
 
-  let cmd = &"""docker run --rm \
-  -v {driverFn.absolutePath}:/usr/app/driver.js \
-  -v {self.testInputFn.absolutePath}:/usr/app/input \
-  -v {self.testMyOutputFn.absolutePath}:/usr/app/user.out \
-  lcnodejs20.10.0 sh -c "node --harmony driver.js < input"
-"""
+  let cmd = @[&"docker run --rm",
+    &"-v {driverFn.absolutePath}:/usr/app/driver.js",
+    &"-v {self.testInputFn.absolutePath}:/usr/app/input",
+    &"-v {self.testMyOutputFn.absolutePath}:/usr/app/user.out",
+    &"lcnodejs20.10.0 sh -c \"node --harmony driver.js < input\"",
+  ].join(" ")
   echo cmd
   if execShellCmd(cmd) != 0: return

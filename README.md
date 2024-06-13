@@ -60,10 +60,10 @@ Visual Studio Code is hard-coded as the code editor and diff tool at the moment.
 * import docker image
 ```bash
 # python3
-$ docker load < lcpython3.11_latest.tar.gz
+$ docker load -i lcpython3.11_latest.tar.gz
 
 # javascript
-$ docker load < lcnodejs20.10.0_latest.tar.gz
+$ docker load -i lcnodejs20.10.0_latest.tar.gz
 ```
 * Use `nlcc test -l` instead of `nlcc test` to test locally
 
@@ -109,7 +109,7 @@ $ ./build.sh
   * [x] python
 * docker env
   * [x] python
-  * [ ] javascript
+  * [x] javascript
   * [ ] limit memory and runtime
 * [ ] support for global site
 * [ ] support for multiple browser profiles
