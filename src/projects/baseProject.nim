@@ -112,6 +112,9 @@ method initProjectDir*(self: BaseProject) {.base.} =
 
   if not fileExists(self.testInputFn) and self.info.testInput.len > 0:
     writeFile(self.testInputFn, self.info.testInput)
+  if not fileExists(self.testOutputFn):
+    let output = extractOutput(self.info.problemDescEn)
+    writeFile(self.testOutputFn, output)
   var srcFn = rc.getCurrentSrc
   if srcFn.len == 0: srcFn = self.getNextSolutionFn
   if not fileExists(srcFn):

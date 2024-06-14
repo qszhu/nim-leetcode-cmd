@@ -103,7 +103,7 @@ $ ./build.sh
   * [ ] cpp
   * [ ] go
   * [ ] rust
-* [ ] extract sample outputs from problem description
+* [x] extract sample outputs from problem description
 * [ ] generate test cases according to problem description
 * test solutions locally
   * [x] python
@@ -136,6 +136,7 @@ $ ./build.sh
     * crypto: [nimtestcrypto](https://github.com/qszhu/nimtestcrypto)
   * parse javascript page data in html: [pageData.nim](https://github.com/qszhu/nimleetcode/blob/main/src/nimleetcode/pageData.nim)
     * parser combinator: [nimparsec](https://github.com/qszhu/nimparsec)
+  * extract question sample output: [extraction.nim](https://github.com/qszhu/nimleetcode/blob/main/src/nimleetcode/extraction.nim)
 * pull precompiled files: [pullPrecompiled.nim](src/scripts/pullPrecompiled.nim)
 * compile nim to javascript: [nimJsProject.nim](src/projects/nimjs/nimJsProject.nim)
 * compile nim to wasm: [nimWasmProject.nim](src/projects/nimwasm/nimWasmProject.nim)

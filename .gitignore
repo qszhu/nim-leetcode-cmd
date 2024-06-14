@@ -1,5 +1,6 @@
 data/
 contests/
+questions/
 build/
 .*rc
 .DS_Store
