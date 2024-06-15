@@ -100,7 +100,7 @@ proc select0(): bool =
   let questions = nlccrc.getContestQuestions
   var num = args.getArg(1)
   if num.len == 0:
-    if not prompt(&"Question no [1..{questions.len}]:", num): return
+    if not prompt(&"Question no [1..{questions.len}]", num): return
 
   let n = num.parseInt - 1
   if n notin 0 ..< questions.len: return
@@ -109,9 +109,15 @@ proc select0(): bool =
 
   openCurrent()
 
+proc list0(): bool =
+  let titles = nlccrc.getContestQuestionTitles
+  for i, title in titles:
+    echo &"{i + 1}.{title}"
+  select0()
+
 proc startIdx0(): bool =
   var s: string
-  if not prompt(&"Default start question index [1..4]:", s): return
+  if not prompt(&"Default start question index [1..4]", s): return
   let n = s.parseInt
   if n notin 1 .. 4: return
   nlccrc.setStartIndex(n - 1)
@@ -162,7 +168,7 @@ proc check(): bool =
 
   let lcSession = initJWT(session)
   if lcSession.getExpireTimestamp - getTime().toUnix <= SESSION_EXPIRE_WARNING_SECS:
-    echo &"Warning: Session expires at {lcSession.getExpireTime}. Consider refreshing session (logout and login again) in the browser and run \"nlcc sync\" again."
+    echo &"Warning: session expires at {lcSession.getExpireTime}. Consider refreshing session (logout and login again) in the browser and run \"nlcc sync\"."
 
   let langOpt = nlccrc.getLanguageOpt
   if langOpt.isNone:
@@ -194,6 +200,8 @@ proc main(): int =
     if not startIdx0(): return -1
   of CMD_LANG:
     if not lang0(): return -1
+  of CMD_LIST:
+    if not list0(): return -1
   # TODO: custom editor command
   # TODO: custom diff command
   else:

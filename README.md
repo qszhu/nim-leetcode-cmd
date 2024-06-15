@@ -41,6 +41,7 @@ $ nlcc build # build solution for current question
 $ nlcc submit # build and submit solution for the current question
               # if the solution is accepted, the next question would be opened
 $ nlcc next # open next question to solve
+$ nlcc list # list and choose question to solve
 $ nlcc select 3 # select the specified question in the contest to solve
 $ nlcc startIdx 4 # set the first question to solve in the contest
 $ nlcc lang # change language
@@ -118,7 +119,7 @@ $ ./build.sh
 * [ ] compatibility for old folder structure
   * [x] compatibility with old code template
 * [ ] update self
-* [ ] list problems and choose one
+* [x] list problems and choose one
 * [x] open file and set cursor in code template
 
 # Implementation details

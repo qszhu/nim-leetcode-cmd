@@ -24,6 +24,7 @@ const KEY_CONTEST = "contest"
 const KEY_EDITOR_CMD = "editor_cmd"
 const KEY_DIFF_CMD = "diff_cmd"
 const KEY_QUESTIONS = "questions"
+const KEY_QUESTION_TITLES = "question_titles"
 const KEY_CURRENT_QUESTION = "current_question"
 const KEY_START_INDEX = "start_index"
 
@@ -91,6 +92,12 @@ proc setContestQuestions*(self: NLCCRC, slugs: seq[string]) {.inline.} =
 
 proc getContestQuestions*(self: NLCCRC): seq[string] {.inline.} =
   self.get(KEY_QUESTIONS).split(",")
+
+proc setContestQuestionTitles*(self: NLCCRC, titles: seq[string]) {.inline.} =
+  self.set(KEY_QUESTION_TITLES, titles.join(","))
+
+proc getContestQuestionTitles*(self: NLCCRC): seq[string] {.inline.} =
+  self.get(KEY_QUESTION_TITLES).split(",")
 
 proc setCurrentQuestion*(self: NLCCRC, i: int) {.inline.} =
   self.set(KEY_CURRENT_QUESTION, $i)

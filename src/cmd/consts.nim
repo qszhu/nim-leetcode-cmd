@@ -7,6 +7,7 @@ const CMD_NEXT* = "next"
 const CMD_SELECT* = "select"
 const CMD_START_IDX* = "startIdx"
 const CMD_LANG* = "lang"
+const CMD_LIST* = "list"
 
 const OPT_BROWSER* = "browser"
 const OPT_PROFILE* = "profile"
