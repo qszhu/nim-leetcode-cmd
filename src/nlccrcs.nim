@@ -27,7 +27,7 @@ const KEY_QUESTIONS = "questions"
 const KEY_CURRENT_QUESTION = "current_question"
 const KEY_START_INDEX = "start_index"
 
-const DEFAULT_EDITOR_CMD = &"code {TMPL_VAR_SOLUTION_SRC}"
+const DEFAULT_EDITOR_CMD = &"code -g {TMPL_VAR_SOLUTION_SRC}:1024"
 const DEFAULT_DIFF_CMD = &"code --diff {TMPL_VAR_DIFF_A} {TMPL_VAR_DIFF_B}"
 const DEFAULT_START_IDX = 0
 

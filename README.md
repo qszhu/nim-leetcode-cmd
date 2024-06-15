@@ -119,7 +119,7 @@ $ ./build.sh
   * [x] compatibility with old code template
 * [ ] update self
 * [ ] list problems and choose one
-* [ ] open file and set cursor in code template
+* [x] open file and set cursor in code template
 
 # Implementation details
 
