@@ -46,6 +46,7 @@ $ nlcc select 3 # select the specified question in the contest to solve
 $ nlcc startIdx 4 # set the first question to solve in the contest
 $ nlcc lang # change language
 $ nlcc sync # sync cookies from browser (e.g. if the cookies expired and you need to login again)
+$ nlcc upgrade # updates self
 ```
 
 # Code templates
@@ -118,7 +119,7 @@ $ ./build.sh
 * [ ] display realtime contest ratings
 * [ ] compatibility for old folder structure
   * [x] compatibility with old code template
-* [ ] update self
+* [x] update self
 * [x] list problems and choose one
 * [x] open file and set cursor in code template
 

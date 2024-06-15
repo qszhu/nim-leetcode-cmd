@@ -13,7 +13,7 @@ import ../consts
 import ../projects/projects
 import ../utils
 import consts
-import subcmd/[start, sync, build, test, submit]
+import subcmd/[start, sync, build, test, submit, upgrade]
 
 
 
@@ -134,6 +134,9 @@ proc lang0(): bool =
     return
   true
 
+proc upgrade0(): bool =
+  upgradeCmd()
+
 proc initCurrentProject(): BaseProject =
   let contestSlug = nlccrc.getCurrentContest
   let questionSlug = nlccrc.getContestQuestions[nlccrc.getCurrentQuestion]
@@ -202,6 +205,8 @@ proc main(): int =
     if not lang0(): return -1
   of CMD_LIST:
     if not list0(): return -1
+  of CMD_UPGRADE:
+    if not upgrade0(): return -1
   # TODO: custom editor command
   # TODO: custom diff command
   else:
