@@ -129,7 +129,7 @@ $ ./build.sh
   * read leetcode session from browser: [nimbrowsercookies](https://github.com/qszhu/nimbrowsercookies)
     * chrome: [chrome.nim](https://github.com/qszhu/nimbrowsercookies/blob/main/src/nimbrowsercookies/chrome.nim)
       * macos
-        * get key from keyring
+        * get key from keyring: [macos.nim](https://github.com/qszhu/nimbrowsercookies/blob/main/src/nimbrowsercookies/macos.nim)
         * derive key with pbkdf2: [pbkdf.nim](https://github.com/qszhu/nimtestcrypto/blob/main/src/nimtestcrypto/pbkdf.nim)
         * decrypt value with aes-128-cbc: [aes.nim](https://github.com/qszhu/nimtestcrypto/blob/main/src/nimtestcrypto/aes.nim)
       * windows
