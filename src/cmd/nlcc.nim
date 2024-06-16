@@ -63,7 +63,8 @@ proc start0(): bool =
 
   if not startCmd(contestSlug): return
 
-  nlccrc.setCurrentContest(contestSlug)
+  if contestSlug.len > 0:
+    nlccrc.setCurrentContest(contestSlug)
   openCurrent()
 
 proc build0(): bool =

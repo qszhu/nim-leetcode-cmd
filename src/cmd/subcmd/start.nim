@@ -154,6 +154,7 @@ proc startCmd*(contestSlug: string): bool =
     ))
     proj.initProjectDir
 
+  nlccrc.setCurrentContest(contestSlug)
   nlccrc.setContestQuestions(questions.mapIt(it.titleSlug))
   nlccrc.setContestQuestionTitles(questions.mapIt(it.title))
   nlccrc.setCurrentQuestion(nlccrc.getStartIndex)
