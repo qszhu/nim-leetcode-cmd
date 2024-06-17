@@ -75,7 +75,7 @@ method buildDir*(self: BaseProject): string {.base, inline.} =
   self.rootDir / "build"
 
 method testDir*(self: BaseProject): string {.base, inline.} =
-  self.rootDir / "testCases"
+  self.rootDir / ".." / "testCases"
 
 method testInputFn*(self: BaseProject): string {.base, inline.} =
   self.testDir / "input"
