@@ -5,7 +5,7 @@ let inst = Module()
 let buf = inst._malloc(lines.length)
 inst.HEAPU8.set(lines, buf)
 
-let resBuf = inst.ccall('solve', 'number', ['number'], [buf])
+let resBuf = inst.ccall('solve', 'number', ['number', 'number'], [buf, lines.length])
 let output = inst.UTF8ToString(resBuf)
 fs.writeFileSync("user.out", output)
 process.exit(0)

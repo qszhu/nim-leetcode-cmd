@@ -7,13 +7,13 @@ import std/[
 import ../baseProject
 import ../utils
 import ../../consts
+import gencodes
 
 
 
 const TMPL_ROOT = "tmpl" / "nimwasm"
 const TMPL_BUILD_FN = TMPL_ROOT / "build.tmpl"
 const TMPL_POST_FN = TMPL_ROOT / "post.tmpl"
-const TMPL_SOLUTION_FN = TMPL_ROOT / "solution.tmpl"
 
 const TMPL_VAR_TARGET_FN = "${targetFn}"
 const TMPL_VAR_SOLUTION_FN = "${solutionFn}"
@@ -25,7 +25,7 @@ type
 proc initNimWasmProject*(info: ProjectInfo): NimWasmProject =
   result.new
   result.init(info)
-  result.code = readFile(TMPL_SOLUTION_FN)
+  result.code = genCode(info.metaData)
 
 method submitLang*(self: NimWasmProject): SubmitLanguage {.inline.} =
   SubmitLanguage.JAVASCRIPT

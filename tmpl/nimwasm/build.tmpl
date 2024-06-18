@@ -21,7 +21,7 @@ nim c \
 
 esbuild ${targetFn} \
   --target=node20.10.0 \
-  --minify=true \
+  --minify \
   --platform=node \
   --outfile=${targetFn} \
   --allow-overwrite

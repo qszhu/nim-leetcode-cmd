@@ -1,31 +1,34 @@
+# --profiler:on --stackTrace:on
+# --profiler:off --stackTrace:on -d:memProfiler
+when compileOption("profiler") or defined(memProfiler):
+  import nimprof
+
 import ../../../../../lib/nimwasm/types
 
-var
-  s: string
-  res: int
+${argDefs}
+${returnVarDef}
 
 proc init() =
   discard
 
 proc solve() =
+${returnVarInit}
   # TODO
-  discard
 
-proc output(): string =
-  $res
-
-proc main(lines: cstring): cstring {.exportc: "solve".} =
+proc main(lines: cstring, sz: int): cstring {.exportc: "solve".} =
   init()
   let
-    reader = newReader(lines)
+    reader = newReader(lines, sz)
     writer = newWriter()
 
   while reader.hasNext:
-    s = reader.readString
+${readArgs}
     solve()
-    writer.write output()
+    writer.write res
 
   writer.toCString
 
 when isMainModule:
-  echo $(main(stdin.readAll.cstring))
+  block:
+    let s = stdin.readAll
+    echo $(main(s.cstring, s.len))

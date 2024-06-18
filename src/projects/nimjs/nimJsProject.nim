@@ -5,8 +5,8 @@ import std/[
 
 import ../baseProject
 import ../utils
-import gencodes
 import ../../consts
+import gencodes
 
 
 
