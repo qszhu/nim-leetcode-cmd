@@ -122,6 +122,7 @@ $ ./build.sh
 * [x] update self
 * [x] list problems and choose one
 * [x] open file and set cursor in code template
+* [ ] github actions
 
 # Implementation details
 

@@ -5,6 +5,9 @@ BUILD=release
 nim c -f -d:$BUILD -o:build/mac/nlcc src/cmd/nlcc.nim
 cp build/mac/nlcc $HOME/bin
 
+nim c -f -d:$BUILD -o:build/mac/nlc src/cmd/nlc.nim
+cp build/mac/nlc $HOME/bin
+
 nim c -d:mingw --cpu:amd64 -f -d:$BUILD -o:build/win/nlcc.exe src/cmd/nlcc.nim
 
 if [ "$BUILD" = "release" ]; then

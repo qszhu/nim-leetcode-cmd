@@ -9,6 +9,7 @@ const CMD_START_IDX* = "startIdx"
 const CMD_LANG* = "lang"
 const CMD_LIST* = "list"
 const CMD_UPGRADE* = "upgrade"
+const CMD_INIT* = "init"
 
 const OPT_BROWSER* = "browser"
 const OPT_PROFILE* = "profile"

@@ -32,6 +32,8 @@ const DEFAULT_EDITOR_CMD = &"code -g {TMPL_VAR_SOLUTION_SRC}:1024"
 const DEFAULT_DIFF_CMD = &"code --diff {TMPL_VAR_DIFF_A} {TMPL_VAR_DIFF_B}"
 const DEFAULT_START_IDX = 0
 
+const KEY_QUESTION = "question"
+
 
 type
   NLCCRC* = RunConfig
@@ -104,6 +106,12 @@ proc setCurrentQuestion*(self: NLCCRC, i: int) {.inline.} =
 
 proc getCurrentQuestion*(self: NLCCRC): int {.inline.} =
   self.get(KEY_CURRENT_QUESTION).parseInt
+
+proc setQuestion*(self: NLCCRC, slug: string) {.inline.} =
+  self.set(KEY_QUESTION, slug)
+
+proc getQuestion*(self: NLCCRC): string {.inline.} =
+  self.get(KEY_QUESTION)
 
 proc setStartIndex*(self: NLCCRC, i: int) {.inline.} =
   self.set(KEY_START_INDEX, $i)

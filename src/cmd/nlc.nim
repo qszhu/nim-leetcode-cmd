@@ -1,3 +1,4 @@
+# TODO: DRY
 import std/[
   sequtils,
   strformat,
@@ -13,7 +14,7 @@ import ../consts
 import ../projects/projects
 import ../utils
 import consts
-import subcmd/[start, sync, build, test, submit, upgrade]
+import subcmd/[build, init, submit, sync, test]
 
 
 
@@ -56,17 +57,6 @@ proc sync0(): bool =
 
   true
 
-proc start0(): bool =
-  let args = initArgs().parse
-
-  var contestSlug = args.getArg(1).getContestSlug
-
-  if not startCmd(contestSlug): return
-
-  if contestSlug.len > 0:
-    nlccrc.setCurrentContest(contestSlug)
-  openCurrent()
-
 proc build0(): bool =
   let proj = initCurrentProject()
   buildCmd(proj)
@@ -81,47 +71,9 @@ proc test0(): bool =
   let proj = initCurrentProject()
   testCmd(proj, local)
 
-proc next0(): bool =
-  let questions = nlccrc.getContestQuestions
-  let cur = nlccrc.getCurrentQuestion
-  let next = (cur + 1) mod questions.len
-  nlccrc.setCurrentQuestion(next)
-
-  openCurrent()
-
 proc submit0(): bool =
   let proj = initCurrentProject()
-  if not submitCmd(proj): return
-
-  next0()
-
-proc select0(): bool =
-  let args = initArgs().parse
-
-  let questions = nlccrc.getContestQuestions
-  var num = args.getArg(1)
-  if num.len == 0:
-    if not prompt(&"Question no [1..{questions.len}]", num): return
-
-  let n = num.parseInt - 1
-  if n notin 0 ..< questions.len: return
-
-  nlccrc.setCurrentQuestion(n)
-
-  openCurrent()
-
-proc list0(): bool =
-  let titles = nlccrc.getContestQuestionTitles
-  for i, title in titles:
-    echo &"{i + 1}.{title}"
-  select0()
-
-proc startIdx0(): bool =
-  var s: string
-  if not prompt(&"Default start question index [1..4]", s): return
-  let n = s.parseInt
-  if n notin 1 .. 4: return
-  nlccrc.setStartIndex(n - 1)
+  submitCmd(proj)
 
 proc lang0(): bool =
   var lang: string
@@ -135,12 +87,18 @@ proc lang0(): bool =
     return
   true
 
-proc upgrade0(): bool =
-  upgradeCmd()
+proc init0(): bool =
+  let args = initArgs().parse
+
+  var questionSlug = args.getArg(1).getQuestionSlug
+
+  if not initCmd(questionSlug): return
+
+  nlccrc.setQuestion(questionSlug)
+  openCurrent()
 
 proc initCurrentProject(): BaseProject =
-  let contestSlug = nlccrc.getCurrentContest
-  let questionSlug = nlccrc.getContestQuestions[nlccrc.getCurrentQuestion]
+  let questionSlug = nlccrc.getQuestion
   let langOpt = nlccrc.getLanguageOpt
   let lang = langOpt.get
   case lang
@@ -150,7 +108,7 @@ proc initCurrentProject(): BaseProject =
     result = NimWasmProject.new
   of Language.PYTHON3:
     result = Python3Project.new
-  result.initFromProject(contestSlug, questionSlug, lang, nlccrc.getCurrentQuestion)
+  result.initFromProject(questionSlug, lang)
 
 proc openCurrent(): bool =
   let proj = initCurrentProject()
@@ -159,7 +117,7 @@ proc openCurrent(): bool =
   let browserOpt = nlccrc.getBrowserOpt
   if browserOpt.isNone: return
 
-  openUrlInBrowser(browserOpt.get, getContestQuestionUrl(proj.contestSlug, proj.questionSlug))
+  openUrlInBrowser(browserOpt.get, getQuestionUrl(proj.contestSlug, proj.questionSlug))
 
   true
 
@@ -172,7 +130,7 @@ proc check(): bool =
 
   let lcSession = initJWT(session)
   if lcSession.getExpireTimestamp - getTime().toUnix <= SESSION_EXPIRE_WARNING_SECS:
-    echo &"Warning: session expires at {lcSession.getExpireTime}. Consider refreshing session (logout and login again) in the browser and run \"nlcc sync\"."
+    echo &"Warning: session expires at {lcSession.getExpireTime}. Consider refreshing session (logout and login again) in the browser and run \"nlc sync\"."
 
   let langOpt = nlccrc.getLanguageOpt
   if langOpt.isNone:
@@ -188,6 +146,8 @@ proc main(): int =
   case args.getArg(0)
   of CMD_SYNC:
     if not sync0(): return -1
+  of CMD_INIT:
+    if not init0(): return -1
   of CMD_BUILD:
     if not build0(): return -1
   of CMD_TEST:
@@ -196,22 +156,10 @@ proc main(): int =
   of CMD_SUBMIT:
     if not build0(): return -1
     if not submit0(): return -1
-  of CMD_NEXT:
-    if not next0(): return -1
-  of CMD_SELECT:
-    if not select0(): return -1
-  of CMD_START_IDX:
-    if not startIdx0(): return -1
   of CMD_LANG:
     if not lang0(): return -1
-  of CMD_LIST:
-    if not list0(): return -1
-  of CMD_UPGRADE:
-    if not upgrade0(): return -1
-  # TODO: custom editor command
-  # TODO: custom diff command
   else:
-    if not start0(): return -1
+    return showHelp()
 
 
 

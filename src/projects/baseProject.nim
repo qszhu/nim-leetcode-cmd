@@ -19,13 +19,16 @@ export os, tables, json
 
 type
   ProjectInfo* = object
-    contestSlug*: string
     titleSlug*: string
     questionId*: string
     lang*: Language
-    order*: int
     metaData*: JsonNode
 
+    # in contest
+    contestSlug*: string
+    order*: int
+
+    # in init
     testInput*: string
     codeSnippets*: Table[string, string]
     problemDesc*, problemDescEn*: string
@@ -63,10 +66,13 @@ method localTest*(self: BaseProject) {.base.} =
   raise newException(CatchableError, "Not implemented: localTest")
 
 method rootDir*(self: BaseProject): string {.base, inline.} =
-  if self.info.order == 0:
-    ROOT_DIR / self.info.contestSlug / self.info.titleSlug / $self.info.lang
+  if self.contestSlug.len == 0:
+    QUESTIONS_ROOT_DIR / self.info.titleSlug / $self.info.lang
   else:
-    ROOT_DIR / self.info.contestSlug / &"{self.info.order}.{self.info.titleSlug}" / $self.info.lang
+    if self.info.order == 0:
+      ROOT_DIR / self.info.contestSlug / self.info.titleSlug / $self.info.lang
+    else:
+      ROOT_DIR / self.info.contestSlug / &"{self.info.order}.{self.info.titleSlug}" / $self.info.lang
 
 method srcDir*(self: BaseProject): string {.base, inline.} =
   self.rootDir / "src"
@@ -161,6 +167,17 @@ method initFromProject*(self: BaseProject, contestSlug, titleSlug: string, lang:
     questionId: rc.getQuestionId,
     lang: lang,
     order: order,
+    metaData: rc.getMetaData,
+  ))
+  self.curSolutionFn = rc.getCurrentSrc
+
+method initFromProject*(self: BaseProject, questionSlug: string, lang: Language) {.base.} =
+  let dir = QUESTIONS_ROOT_DIR / questionSlug / $lang
+  let rc = initProjectRC(dir)
+  self.init(ProjectInfo(
+    titleSlug: questionSlug,
+    questionId: rc.getQuestionId,
+    lang: lang,
     metaData: rc.getMetaData,
   ))
   self.curSolutionFn = rc.getCurrentSrc

@@ -1,4 +1,5 @@
 const ROOT_DIR* = "contests"
+const QUESTIONS_ROOT_DIR* = "questions"
 
 const TMPL_VAR_SOLUTION_SRC* = "{{solutionSrc}}"
 const TMPL_VAR_DIFF_A* = "{{diffA}}"

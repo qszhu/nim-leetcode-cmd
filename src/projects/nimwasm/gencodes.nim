@@ -23,6 +23,7 @@ proc getType(t: string): string {.inline.} =
   of "string": "string"
   of "boolean": "bool"
   of "integer[]": "seq[int]"
+  of "integer[][]": "seq[seq[int]]"
   else:
     raise newException(ValueError, "Type not implemented: " & t)
 
@@ -32,6 +33,7 @@ proc getDefaultVal(t: string): string {.inline.} =
   of "string": "\"\""
   of "boolean": "false"
   of "integer[]": "newSeq[int]()"
+  of "integer[][]": "newSeq[seq[int]]()"
   else:
     raise newException(ValueError, "Type not implemented: " & t)
 
@@ -43,6 +45,7 @@ proc getReadMethodName(t: string): string {.inline.} =
   of "string": "readString"
   of "boolean": "readBool"
   of "integer[]": "readInts"
+  of "integer[][]": "readInts2D"
   else:
     raise newException(ValueError, "Type not implemented: " & t)
 

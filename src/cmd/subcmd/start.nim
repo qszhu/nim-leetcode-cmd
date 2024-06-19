@@ -3,16 +3,14 @@ import std/[
   json,
   sequtils,
   strformat,
-  tables,
 ]
 
 import pkg/nimleetcode
 
 import ../../nlccrcs
 import ../../projects/projects
-import ../../consts
-import utils
 import ../../utils
+import utils
 
 
 
@@ -60,22 +58,6 @@ proc initQuestionInfo(jso: JsonNode): QuestionInfo =
     credit: jso["credit"].getInt,
     titleSlug: jso["title_slug"].getStr,
   )
-
-type
-  CodeSnippets = Table[string, string]
-
-proc initCodeSnippets(jso: JsonNode): CodeSnippets =
-  for r in jso:
-    result[r["value"].getStr] = r["defaultCode"].getStr
-
-proc initProject(info: ProjectInfo): BaseProject =
-  case info.lang
-  of Language.NIM_JS:
-    initNimJsProject(info)
-  of Language.NIM_WASM:
-    initNimWasmProject(info)
-  of Language.PYTHON3:
-    initPython3Project(info)
 
 proc getContestQuestionPageData(client: LcClient,
   contestSlug, titleSlug: string

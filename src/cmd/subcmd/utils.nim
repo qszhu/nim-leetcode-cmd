@@ -3,11 +3,14 @@ import std/[
   sequtils,
   strformat,
   strutils,
+  tables,
   terminal,
 ]
 
-import ../consts
+import ../../projects/projects
 import ../../utils
+import ../../consts
+import ../consts
 
 
 
@@ -59,3 +62,19 @@ proc showCodeOutput*(jso: JsonNode) =
   if output.len > 0:
     echo "Code output:"
     echo output
+
+type
+  CodeSnippets = Table[string, string]
+
+proc initCodeSnippets*(jso: JsonNode): CodeSnippets =
+  for r in jso:
+    result[r["value"].getStr] = r["defaultCode"].getStr
+
+proc initProject*(info: ProjectInfo): BaseProject =
+  case info.lang
+  of Language.NIM_JS:
+    initNimJsProject(info)
+  of Language.NIM_WASM:
+    initNimWasmProject(info)
+  of Language.PYTHON3:
+    initPython3Project(info)
