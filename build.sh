@@ -8,7 +8,18 @@ cp build/mac/nlcc $HOME/bin
 nim c -f -d:$BUILD -o:build/mac/nlc src/cmd/nlc.nim
 cp build/mac/nlc $HOME/bin
 
-nim c -d:mingw --cpu:amd64 -f -d:$BUILD -o:build/win/nlcc.exe src/cmd/nlcc.nim
+nim c \
+  -f \
+  -d:$BUILD \
+  --os:windows \
+  --cpu:amd64 \
+  --cc:clang \
+  --clang.exe="zigcc" \
+  --clang.linkerexe="zigcc" \
+  --passC:"-target x86_64-windows" \
+  --passL:"-target x86_64-windows" \
+  -o:build/win/nlcc.exe \
+  src/cmd/nlcc.nim
 
 if [ "$BUILD" = "release" ]; then
   cp -r tmpl build/

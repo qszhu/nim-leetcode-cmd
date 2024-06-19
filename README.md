@@ -75,13 +75,21 @@ $ docker load -i lcnodejs20.10.0_amd64.tar.gz
 
 Add new implementations of [BaseProject](src/projects/baseProject.nim) to [src/projects/](src/projects/). For example [Python3Project](src/projects/python/python3Project.nim). Pull requests are welcome.
 
-## [Cross-compilation for windows](https://nim-lang.github.io/Nim/nimc.html#crossminuscompilation-for-windows)
+## Cross-compilation for windows
+
+* Install zig
 
 ```bash
-$ brew install mingw-w64 # OSX
+$ brew install zig # OSX
 ```
 
-* Modify `nim.cfg` as needed.
+* Create a `zigcc` file on `$PATH`
+
+```bash
+#!/bin/sh
+zig cc $@
+```
+
 * Build
 
 ```bash
