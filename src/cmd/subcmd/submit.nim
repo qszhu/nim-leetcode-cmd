@@ -29,7 +29,8 @@ proc submitCmd*(proj: BaseProject): bool =
   # Accepted
   showRuntimeMemory(res)
 
-  let rank = waitFor client.contestMyRanking(proj.contestSlug)
-  showRank(rank)
+  if proj.isInContest:
+    let rank = waitFor client.contestMyRanking(proj.contestSlug)
+    showRank(rank)
 
   true

@@ -44,6 +44,9 @@ type
 method contestSlug*(self: BaseProject): string {.base, inline.} =
   self.info.contestSlug
 
+proc isInContest*(self: BaseProject): bool {.inline.} =
+  self.contestSlug.len != 0
+
 method questionSlug*(self: BaseProject): string {.base, inline.} =
   self.info.titleSlug
 
@@ -66,13 +69,13 @@ method localTest*(self: BaseProject) {.base.} =
   raise newException(CatchableError, "Not implemented: localTest")
 
 method rootDir*(self: BaseProject): string {.base, inline.} =
-  if self.contestSlug.len == 0:
-    QUESTIONS_ROOT_DIR / self.info.titleSlug / $self.info.lang
-  else:
+  if self.isInContest:
     if self.info.order == 0:
       ROOT_DIR / self.info.contestSlug / self.info.titleSlug / $self.info.lang
     else:
       ROOT_DIR / self.info.contestSlug / &"{self.info.order}.{self.info.titleSlug}" / $self.info.lang
+  else:
+    QUESTIONS_ROOT_DIR / self.info.titleSlug / $self.info.lang
 
 method srcDir*(self: BaseProject): string {.base, inline.} =
   self.rootDir / "src"
@@ -145,15 +148,23 @@ proc checkResult*(client: LcClient, submitId: string, isTest: bool): Future[Json
 method test*(self: BaseProject, client: LcClient): JsonNode {.base.} =
   let code = readFile(self.targetFn)
   let testInput = readFile(self.testInputFn)
-  result = waitFor client.testContestSolution(
-    self.info.contestSlug, self.info.titleSlug, self.info.questionId, $self.submitLang, code, testInput)
+  if self.isInContest:
+    result = waitFor client.testContestSolution(
+      self.info.contestSlug, self.info.titleSlug, self.info.questionId, $self.submitLang, code, testInput)
+  else:
+    result = waitFor client.testSolution(
+      self.info.titleSlug, self.info.questionId, $self.submitLang, code, testInput)
   let interpretId = result["interpret_id"].getStr
   result = waitFor client.checkResult(interpretId, isTest = true)
 
 method submit*(self: BaseProject, client: LcClient): JsonNode {.base.} =
   let code = readFile(self.targetFn)
-  result = waitFor client.submitContestSolution(
-    self.info.contestSlug, self.info.titleSlug, self.info.questionId, $self.submitLang, code)
+  if self.isInContest:
+    result = waitFor client.submitContestSolution(
+      self.info.contestSlug, self.info.titleSlug, self.info.questionId, $self.submitLang, code)
+  else:
+    result = waitFor client.submitSolution(
+      self.info.titleSlug, self.info.questionId, $self.submitLang, code)
   let submitId = $(result["submission_id"].getBiggestInt)
   result = waitFor client.checkResult(submitId, isTest = false)
 

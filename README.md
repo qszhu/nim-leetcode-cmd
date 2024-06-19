@@ -122,10 +122,11 @@ $ ./build.sh
   * [x] python
   * [-] javascript
   * [ ] limit memory and runtime
+  * [ ] publish
 * [ ] support for global site
 * [ ] support for multiple browser profiles
 * [ ] display realtime contest ratings
-* [ ] compatibility for old folder structure
+* [ ] compatibility with old folder structure
   * [x] compatibility with old code template
 * [x] update self
 * [x] list problems and choose one
