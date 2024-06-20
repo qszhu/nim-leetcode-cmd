@@ -24,13 +24,13 @@ jobs:
         ./build.sh
 
     - name: Upload nlcc
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nlcc
         path: build/mac/nlcc
 
     - name: Upload nlcc.exe
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nlcc.exe
         path: build/win/nlcc.exe
@@ -39,7 +39,7 @@ jobs:
       run: zip -rq build/dlls.zip build/dlls
 
     - name: Upload dlls.zip
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dlls.zip
         path: build/dlls.zip
@@ -48,7 +48,7 @@ jobs:
       run: zip -rq build/tmpl.zip build/tmpl
 
     - name: Upload tmpl.zip
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: tmpl.zip
         path: build/tmpl.zip
@@ -62,37 +62,37 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Download nlcc
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: nlcc
         path: .
 
     - name: Download nlcc.exe
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: nlcc.exe
         path: .
 
     - name: Download dlls.zip
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: dlls.zip
         path: .
 
     - name: Download tmpl.zip
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: tmpl.zip
         path: .
 
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1
+      uses: actions/create-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.sha }}
+        release_name: Release ${{ github.sha }}
         draft: false
         prerelease: false
 
