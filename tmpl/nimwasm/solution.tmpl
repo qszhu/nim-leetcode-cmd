@@ -8,13 +8,8 @@ import ../../../../../lib/nimwasm/types
 ${argDefs}
 ${returnVarDef}
 
-proc init() =
-  discard
-
-proc solve() =
-${returnVarInit}
-  # TODO
-
+proc init()
+proc solve()
 proc main(lines: cstring, sz: int): cstring {.exportc: "solve".} =
   init()
   let
@@ -32,3 +27,10 @@ when isMainModule:
   block:
     let s = stdin.readAll
     echo $(main(s.cstring, s.len))
+
+proc init() =
+  discard
+
+proc solve() =
+${returnVarInit}
+  # TODO

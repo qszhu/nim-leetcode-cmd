@@ -37,15 +37,15 @@ proc getDefaultVal(t: string): string {.inline.} =
   else:
     raise newException(ValueError, "Type not implemented: " & t)
 
-proc getReadMethodName(t: string): string {.inline.} =
+proc getReadMethod(t: string): string {.inline.} =
   case t
-  of "integer": "readInt"
-  of "long": "readLong"
-  of "double": "readDouble"
-  of "string": "readString"
-  of "boolean": "readBool"
-  of "integer[]": "readInts"
-  of "integer[][]": "readInts2D"
+  of "integer": "readInt[int](reader)"
+  of "long": "readInt[int64](reader)"
+  of "double": "reader.readDouble"
+  of "string": "reader.readString"
+  of "boolean": "reader.readBool"
+  of "integer[]": "readInts[int](reader)"
+  of "integer[][]": "readInts2D[int](reader)"
   else:
     raise newException(ValueError, "Type not implemented: " & t)
 
@@ -65,7 +65,7 @@ proc getReadArgs(metaData: JsonNode): string =
     let name = param["name"].getStr
     let typ = param["type"].getStr
     res.add (&"""
-    {name} = reader.{getReadMethodName(typ)}
+    {name} = {getReadMethod(typ)}
 """).strip(leading = false)
 
   res.join("\n")
