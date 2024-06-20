@@ -1,0 +1,26 @@
+name: build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Nim
+      run: |
+        brew install nim
+
+    - name: Install Zig
+      run: |
+        brew install zig
+
+    - name: Install Docker
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build
+      run: |
+        ./build.sh

@@ -9,7 +9,7 @@ nim c -f -d:$BUILD -o:build/mac/nlc src/cmd/nlc.nim
 cp build/mac/nlc $HOME/bin
 
 if [ "$BUILD" = "release" ]; then
-  nim c \
+  PATH=.:$PATH nim c \
     -f \
     -d:$BUILD \
     --os:windows \

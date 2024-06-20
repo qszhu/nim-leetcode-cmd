@@ -83,13 +83,6 @@ Add new implementations of [BaseProject](src/projects/baseProject.nim) to [src/p
 $ brew install zig # OSX
 ```
 
-* Create a `zigcc` file on `$PATH`
-
-```bash
-#!/bin/sh
-zig cc $@
-```
-
 * Build
 
 ```bash
@@ -122,16 +115,17 @@ $ ./build.sh
   * [x] python
   * [-] javascript
   * [ ] limit memory and runtime
-  * [ ] publish
+  * [ ] publish to hub
 * [ ] support for global site
 * [ ] support for multiple browser profiles
-* [ ] display realtime contest ratings
+* [ ] protect extracted session
+* [ ] realtime contest ratings
 * [ ] compatibility with old folder structure
   * [x] compatibility with old code template
 * [x] update self
 * [x] list problems and choose one
 * [x] open file and set cursor in code template
-* [ ] github actions
+* [x] github actions
 
 # Implementation details
 
