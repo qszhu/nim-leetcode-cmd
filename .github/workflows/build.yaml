@@ -36,7 +36,7 @@ jobs:
         path: build/win/nlcc.exe
 
     - name: Zip dlls.zip
-      run: zip -rq build/dlls.zip build/dlls
+      run: zip -jrq build/dlls.zip build/dlls
 
     - name: Upload dlls.zip
       uses: actions/upload-artifact@v4
@@ -45,93 +45,10 @@ jobs:
         path: build/dlls.zip
 
     - name: Zip tmpl.zip
-      run: zip -rq build/tmpl.zip build/tmpl
+      run: cd build && zip -rq ../tmpl.zip tmpl
 
     - name: Upload tmpl.zip
       uses: actions/upload-artifact@v4
       with:
         name: tmpl.zip
         path: build/tmpl.zip
-
-  release:
-    needs: build
-    runs-on: macos-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Download nlcc
-      uses: actions/download-artifact@v4
-      with:
-        name: nlcc
-        path: .
-
-    - name: Download nlcc.exe
-      uses: actions/download-artifact@v4
-      with:
-        name: nlcc.exe
-        path: .
-
-    - name: Download dlls.zip
-      uses: actions/download-artifact@v4
-      with:
-        name: dlls.zip
-        path: .
-
-    - name: Download tmpl.zip
-      uses: actions/download-artifact@v4
-      with:
-        name: tmpl.zip
-        path: .
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.sha }}
-        release_name: Release ${{ github.sha }}
-        draft: false
-        prerelease: false
-
-    - name: Upload nlcc
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: nlcc
-        asset_name: nlcc
-        asset_content_type: application/octet-stream
-
-    - name: Upload nlcc.exe
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: nlcc.exe
-        asset_name: nlcc.exe
-        asset_content_type: application/octet-stream
-
-    - name: Upload dlls.zip
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dlls.zip
-        asset_name: dlls.zip
-        asset_content_type: application/octet-stream
-
-    - name: Upload tmpl.zip
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: tmpl.zip
-        asset_name: tmpl.zip
-        asset_content_type: application/octet-stream
