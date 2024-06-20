@@ -20,5 +20,5 @@ jobs:
 
     - name: Build
       run: |
-        nimble install
+        nimble install -y
         ./build.sh
