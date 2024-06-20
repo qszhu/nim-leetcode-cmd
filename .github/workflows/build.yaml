@@ -36,7 +36,7 @@ jobs:
         path: build/win/nlcc.exe
 
     - name: Zip dlls.zip
-      run: zip -jrq build/dlls.zip build/dlls
+      run: zip -jrq build/dlls.zip dlls
 
     - name: Upload dlls.zip
       uses: actions/upload-artifact@v4
@@ -45,7 +45,7 @@ jobs:
         path: build/dlls.zip
 
     - name: Zip tmpl.zip
-      run: cd build && zip -rq ../tmpl.zip tmpl
+      run: zip -rq build/tmpl.zip tmpl
 
     - name: Upload tmpl.zip
       uses: actions/upload-artifact@v4
