@@ -24,7 +24,4 @@ if [ "$BUILD" = "release" ]; then
 
   cp -r tmpl build/
   cp -r dlls build/
-
-  cd docker/python3 && ./build.sh && cd -
-  cd docker/javascript && ./build.sh && cd -
 fi
