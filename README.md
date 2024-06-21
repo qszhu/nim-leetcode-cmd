@@ -59,9 +59,12 @@ Visual Studio Code is hard-coded as the code editor and diff tool at the moment.
 
 # Local test (Experimental)
 
+* install Docker
 * build docker image
+
 ```bash
-$ ./build_docker.sh
+$ cd docker/python3
+$ build.bat
 ```
 * Use `nlcc test -l` instead of `nlcc test` to test locally
 
@@ -109,7 +112,7 @@ $ ./build.sh
   * [x] nimwasm
 * docker env
   * [x] python
-  * [-] javascript
+  * [x] javascript
   * [ ] limit memory and runtime
   * [ ] publish to hub
 * [ ] support for global site
