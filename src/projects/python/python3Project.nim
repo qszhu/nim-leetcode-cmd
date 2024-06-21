@@ -22,6 +22,9 @@ const TMPL_DRIVER_FN = TMPL_ROOT / "driver.tmpl"
 const TMPL_VAR_DRIVER_LOOP = "${driverLoop}"
 
 proc genCode(code, problemDesc, problemDescEn: string): string =
+  # In python, use spaces for tabs
+  let problemDesc = problemDesc.replace("\t", "    ")
+  let problemDescEn = problemDescEn.replace("\t", "    ")
   let tmpl = readFile(TMPL_FN)
   result = tmpl
     .replace(TMPL_VAR_CODE, code)
