@@ -54,6 +54,8 @@ proc sync0(): bool =
   nlccrc.setBrowser(browserOpt.get)
   nlccrc.setBrowserProfilePath(profilePath)
 
+  let lcSession = initJWT(nlccrc.getLeetCodeSession)
+  echo &"Sync complete. Session now expires at {lcSession.getExpireTime}."
   true
 
 proc start0(): bool =
@@ -171,8 +173,12 @@ proc check(): bool =
   if session.len == 0: return
 
   let lcSession = initJWT(session)
-  if lcSession.getExpireTimestamp - getTime().toUnix <= SESSION_EXPIRE_WARNING_SECS:
+  let sessionRemainTime = lcSession.getExpireTimestamp - getTime().toUnix
+  if sessionRemainTime <= SESSION_EXPIRE_WARNING_SECS:
     echo &"Warning: session expires at {lcSession.getExpireTime}. Consider refreshing session (logout and login again) in the browser and run \"nlcc sync\"."
+  elif sessionRemainTime <= 0:
+    echo &"Session expired at {lcSession.getExpireTime}."
+    return
 
   let langOpt = nlccrc.getLanguageOpt
   if langOpt.isNone:

@@ -109,6 +109,7 @@ $ ./build.sh
 * [ ] generate test cases according to problem description
 * test solutions locally
   * [x] python
+    * [ ] debugger support
   * [x] nimwasm
 * docker env
   * [x] python

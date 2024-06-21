@@ -16,7 +16,7 @@ proc runDiff(fa, fb: string): bool =
   let ca = readFile(fa).strip(leading = false)
   let cb = readFile(fb).strip(leading = false)
   if ca == cb:
-    echo "SUCCESS"
+    echo "\n\nSUCCESS"
     return true
   else:
     let cmd = nlccrc.getDiffCmd()
