@@ -1,3 +1,5 @@
+[![build](https://github.com/qszhu/nim-leetcode-cmd/actions/workflows/build.yaml/badge.svg)](https://github.com/qszhu/nim-leetcode-cmd/actions/workflows/build.yaml)
+
 # Getting started
 
 * Login in your preferred browser (Chrome/Edge/Firefox).
