@@ -52,3 +52,21 @@ jobs:
       with:
         name: tmpl.zip
         path: build/tmpl.zip
+
+    - name: Zip python3.zip
+      run: zip -rq build/python3.zip docker/python3
+
+    - name: Upload python3.zip
+      uses: actions/upload-artifact@v4
+      with:
+        name: python3.zip
+        path: build/python3.zip
+
+    - name: Zip javascript.zip
+      run: zip -rq build/javascript.zip docker/javascript
+
+    - name: Upload javascript.zip
+      uses: actions/upload-artifact@v4
+      with:
+        name: javascript.zip
+        path: build/javascript.zip
