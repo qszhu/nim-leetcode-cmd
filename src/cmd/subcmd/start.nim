@@ -92,7 +92,7 @@ proc startCmd*(contestSlug: string): bool =
     let nextContest = upcomingContests[0]
     contestSlug = nextContest.contestSlug
 
-  let info = waitFor client.contestInfo(contestSlug)
+  var info = waitFor client.contestInfo(contestSlug)
 
   let contestInfo = initContestInfo(info["contest"])
 
@@ -111,6 +111,7 @@ proc startCmd*(contestSlug: string): bool =
       echo "Registered"
 
   countDown(contestInfo, client)
+  info = waitFor client.contestInfo(contestSlug)
 
   let questions = info["questions"].mapIt(it.initQuestionInfo)
 
