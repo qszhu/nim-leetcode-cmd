@@ -27,7 +27,7 @@ proc initCmd*(titleSlug: string): bool =
   let testInput = question["exampleTestcases"].getStr
   let metaData = question["metaData"].getStr.parseJson
 
-  res = waitFor client.questionEditorData(titleSlug)
+  res = waitFor client.questionEditorData(titleSlug, login = true)
   question = res["data"]["question"]
   let snippets = initCodeSnippets(question["codeSnippets"])
 
