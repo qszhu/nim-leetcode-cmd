@@ -20,34 +20,35 @@ proc getType(t: string): string {.inline.} =
   of "integer": "int"
   of "long": "int64"
   of "double": "float"
-  of "string": "string"
+  of "character", "string": "string"
   of "boolean": "bool"
-  of "integer[]": "seq[int]"
-  of "integer[][]": "seq[seq[int]]"
   else:
-    raise newException(ValueError, "Type not implemented: " & t)
+    if t.endsWith("[]"): "seq[" & t[0 ..< ^2].getType & "]"
+    else:
+      raise newException(ValueError, "Type not implemented: " & t)
 
 proc getDefaultVal(t: string): string {.inline.} =
   case t
   of "integer", "long", "double": "0"
   of "string": "\"\""
   of "boolean": "false"
-  of "integer[]": "newSeq[int]()"
-  of "integer[][]": "newSeq[seq[int]]()"
   else:
-    raise newException(ValueError, "Type not implemented: " & t)
+    if t.endsWith("[]"): "@[]"
+    else:
+      raise newException(ValueError, "Type not implemented: " & t)
 
 proc getReadMethod(t: string): string {.inline.} =
   case t
-  of "integer": "readInt[int](reader)"
-  of "long": "readInt[int64](reader)"
-  of "double": "reader.readDouble"
-  of "string": "reader.readString"
-  of "boolean": "reader.readBool"
-  of "integer[]": "readInts[int](reader)"
-  of "integer[][]": "readInts2D[int](reader)"
+  of "integer": "readInt"
+  of "long": "readLong"
+  of "double": "readDouble"
+  of "character", "string": "readString"
+  of "boolean": "readBool"
   else:
-    raise newException(ValueError, "Type not implemented: " & t)
+    if t.endsWith("[][]"): t[0 ..< ^4].getReadMethod & "s2D"
+    elif t.endsWith("[]"): t[0 ..< ^2].getReadMethod & "s"
+    else:
+      raise newException(ValueError, "Type not implemented: " & t)
 
 proc getArgDefs(metaData: JsonNode): string =
   var res = newSeq[string]()
@@ -65,7 +66,7 @@ proc getReadArgs(metaData: JsonNode): string =
     let name = param["name"].getStr
     let typ = param["type"].getStr
     res.add (&"""
-    {name} = {getReadMethod(typ)}
+    {name} = reader.{getReadMethod(typ)}
 """).strip(leading = false)
 
   res.join("\n")
