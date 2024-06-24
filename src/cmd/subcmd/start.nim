@@ -92,6 +92,10 @@ proc startCmd*(contestSlug: string): bool =
     let nextContest = upcomingContests[0]
     contestSlug = nextContest.contestSlug
 
+  block:
+    let res = waitFor client.toggleContestDynamicLayout(contestSlug, false)
+    assert res["data"]["toggleContestDynamicLayout"]["ok"].getBool
+
   var info = waitFor client.contestInfo(contestSlug)
 
   let contestInfo = initContestInfo(info["contest"])
