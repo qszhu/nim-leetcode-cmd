@@ -75,6 +75,60 @@ proc countDown(contest: ContestInfo, client: LcClient) =
     showCountDown(delta)
     sleep(1000)
 
+proc initQuestionProjClassic(client: LcClient,
+  contestSlug, titleSlug, questionId: string, order: int, lang: Language
+) {.async.} =
+  let res = waitFor client.getContestQuestionPageData(contestSlug, titleSlug)
+  let snippets = initCodeSnippetsClassic(res["codeDefinition"])
+  let testInput = res["questionExampleTestcases"].getStr
+  let metaData = res["metaData"]
+  let proj = initProject(ProjectInfo(
+    contestSlug: contestSlug,
+    titleSlug: titleSlug,
+    questionId: questionId,
+    lang: lang,
+    order: order,
+    testInput: testInput,
+    codeSnippets: snippets,
+    metaData: metaData,
+    problemDesc: res["questionContent"].getStr,
+    problemDescEn: res["questionSourceContent"].getStr,
+  ))
+  proj.initProjectDir
+
+proc initQuestionProj(client: LcClient,
+  contestSlug, titleSlug: string, order: int, lang: Language
+) {.async.} =
+  var res = waitFor client.consolePanelConfig(titleSlug)
+  var question = res["data"]["question"]
+  let questionId = question["questionId"].getStr
+  let testInput = question["exampleTestcases"].getStr
+  let metaData = question["metaData"].getStr.parseJson
+
+  res = waitFor client.questionEditorData(titleSlug, login = true)
+  question = res["data"]["question"]
+  let snippets = initCodeSnippets(question["codeSnippets"])
+
+  res = waitFor client.questionContent(titleSlug)
+  let problemDescEn = res["data"]["question"]["content"].getStr
+
+  res = waitFor client.questionTranslations(titleSlug)
+  let problemDesc = res["data"]["question"]["translatedContent"].getStr
+
+  let proj = initProject(ProjectInfo(
+    contestSlug: contestSlug,
+    titleSlug: titleSlug,
+    questionId: questionId,
+    lang: lang,
+    order: order,
+    testInput: testInput,
+    codeSnippets: snippets,
+    metaData: metaData,
+    problemDesc: problemDesc,
+    problemDescEn: problemDescEn
+  ))
+  proj.initProjectDir
+
 proc startCmd*(contestSlug: string): bool =
   var contestSlug = contestSlug
 
@@ -91,10 +145,6 @@ proc startCmd*(contestSlug: string): bool =
 
     let nextContest = upcomingContests[0]
     contestSlug = nextContest.contestSlug
-
-  block:
-    let res = waitFor client.toggleContestDynamicLayout(contestSlug, false)
-    assert res["data"]["toggleContestDynamicLayout"]["ok"].getBool
 
   var info = waitFor client.contestInfo(contestSlug)
 
@@ -123,23 +173,10 @@ proc startCmd*(contestSlug: string): bool =
 
   for i, q in questions:
     echo &"{i + 1}.{q.title}"
-    let res = waitFor client.getContestQuestionPageData(contestSlug, q.titleSlug)
-    let snippets = initCodeSnippets(res["codeDefinition"])
-    let testInput = res["questionExampleTestcases"].getStr
-    let metaData = res["metaData"]
-    let proj = initProject(ProjectInfo(
-      contestSlug: contestSlug,
-      titleSlug: q.titleSlug,
-      questionId: $q.questionId,
-      lang: langOpt.get,
-      order: i + 1,
-      testInput: testInput,
-      codeSnippets: snippets,
-      metaData: metaData,
-      problemDesc: res["questionContent"].getStr,
-      problemDescEn: res["questionSourceContent"].getStr,
-    ))
-    proj.initProjectDir
+    try:
+      waitFor initQuestionProjClassic(client, contestSlug, q.titleSlug, $q.questionId, i + 1, langOpt.get)
+    except:
+      waitFor initQuestionProj(client, contestSlug, q.titleSlug, i + 1, langOpt.get)
 
   nlccrc.setCurrentContest(contestSlug)
   nlccrc.setContestQuestions(questions.mapIt(it.titleSlug))

@@ -1,7 +1,3 @@
-import std/[
-  tables,
-]
-
 import pkg/nimleetcode
 
 import ../../nlccrcs
@@ -9,11 +5,6 @@ import ../../projects/projects
 import utils
 
 
-
-proc initCodeSnippets(jso: JsonNode): Table[string, string] =
-  # DRY
-  for r in jso:
-    result[r["langSlug"].getStr] = r["code"].getStr
 
 proc initCmd*(titleSlug: string): bool =
   let client = newLcClient()

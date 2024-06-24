@@ -64,11 +64,15 @@ proc showCodeOutput*(jso: JsonNode) =
     echo output
 
 type
-  CodeSnippets = Table[string, string]
+  CodeSnippets* = Table[string, string]
+
+proc initCodeSnippetsClassic*(jso: JsonNode): CodeSnippets =
+  for r in jso:
+    result[r["value"].getStr] = r["defaultCode"].getStr
 
 proc initCodeSnippets*(jso: JsonNode): CodeSnippets =
   for r in jso:
-    result[r["value"].getStr] = r["defaultCode"].getStr
+    result[r["langSlug"].getStr] = r["code"].getStr
 
 proc initProject*(info: ProjectInfo): BaseProject =
   case info.lang
