@@ -24,6 +24,8 @@ proc getType(t: string): string {.inline.} =
   of "boolean": "bool"
   else:
     if t.endsWith("[]"): "seq[" & t[0 ..< ^2].getType & "]"
+    elif t.startsWith("list<") and t.endsWith(">"):
+      "seq[" & t[5 ..< ^1].getType & "]"
     else:
       raise newException(ValueError, "Type not implemented: " & t)
 
@@ -34,6 +36,7 @@ proc getDefaultVal(t: string): string {.inline.} =
   of "boolean": "false"
   else:
     if t.endsWith("[]"): "@[]"
+    elif t.startsWith("list<") and t.endsWith(">"): "@[]"
     else:
       raise newException(ValueError, "Type not implemented: " & t)
 
@@ -47,6 +50,8 @@ proc getReadMethod(t: string): string {.inline.} =
   else:
     if t.endsWith("[][]"): t[0 ..< ^4].getReadMethod & "s2D"
     elif t.endsWith("[]"): t[0 ..< ^2].getReadMethod & "s"
+    elif t.startsWith("list<") and t.endsWith(">"):
+      t[5 ..< ^1].getReadMethod & "s"
     else:
       raise newException(ValueError, "Type not implemented: " & t)
 
