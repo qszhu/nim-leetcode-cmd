@@ -61,14 +61,31 @@ Visual Studio Code is hard-coded as the code editor and diff tool at the moment.
 
 # Local test (Experimental)
 
-* install Docker
-* build docker image
+* Install Docker.
+* Build docker image:
 
 ```bash
 $ cd docker/python3
-$ build.bat
+$ build.bat # windows
+$ build.sh # others
 ```
+
 * Use `nlcc test -l` instead of `nlcc test` to test locally
+
+# Local debug (Experimental)
+
+* Install Docker.
+* Build docker image:
+
+```bash
+$ cd docker/python3
+$ build.bat # windows
+$ build.sh # others
+```
+
+* In your Python code, add `breakpoint()` to set breakpoints.
+* Run `nlcc debug`.
+* In VS Code, select the `Run and Debug`(运行和调试) tab, and launch `nlcc debug`. The debugger should stop at the first breakpoint.
 
 # Develop
 
@@ -127,7 +144,9 @@ $ ./build.sh
 * [x] update self
 * [x] list problems and choose one
 * [x] open file and set cursor in code template
-* [x] github actions
+* github actions
+  * [x] build
+  * [ ] release
 
 # Implementation details
 

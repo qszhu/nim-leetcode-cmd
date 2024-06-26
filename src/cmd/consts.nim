@@ -10,11 +10,13 @@ const CMD_LANG* = "lang"
 const CMD_LIST* = "list"
 const CMD_UPGRADE* = "upgrade"
 const CMD_INIT* = "init"
+const CMD_DEBUG* = "debug"
 
 const OPT_BROWSER* = "browser"
 const OPT_PROFILE* = "profile"
 const OPT_FORCE* = "force"
 const OPT_LOCAL* = "local"
+const OPT_DEBUG_PORT* = "port"
 
 const STATUS_ACCEPTED* = "Accepted"
 const STATUS_WRONG_ANSWER* = "Wrong Answer"

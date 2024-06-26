@@ -68,6 +68,9 @@ method build*(self: BaseProject): bool {.base.} =
 method localTest*(self: BaseProject) {.base.} =
   raise newException(CatchableError, "Not implemented: localTest")
 
+method debug*(self: BaseProject, port: int) {.base.} =
+  raise newException(CatchableError, "Not implemented: debug")
+
 method rootDir*(self: BaseProject): string {.base, inline.} =
   if self.isInContest:
     if self.info.order == 0:

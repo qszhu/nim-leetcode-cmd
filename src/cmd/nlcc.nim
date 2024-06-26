@@ -13,7 +13,7 @@ import ../consts
 import ../projects/projects
 import ../utils
 import consts
-import subcmd/[start, sync, build, test, submit, upgrade]
+import subcmd/[build, debug, start, submit, sync, test, upgrade]
 
 
 
@@ -82,6 +82,16 @@ proc test0(): bool =
 
   let proj = initCurrentProject()
   testCmd(proj, local)
+
+proc debug0(): bool =
+  let args = initArgs()
+    .addOption(OPT_DEBUG_PORT, "p")
+    .parse
+
+  let port = args.getOption(OPT_DEBUG_PORT, "5678").parseInt
+
+  let proj = initCurrentProject()
+  debugCmd(proj, port)
 
 proc next0(): bool =
   let questions = nlccrc.getContestQuestions
@@ -199,6 +209,9 @@ proc main(): int =
   of CMD_TEST:
     if not build0(): return -1
     if not test0(): return -1
+  of CMD_DEBUG:
+    if not build0(): return -1
+    if not debug0(): return -1
   of CMD_SUBMIT:
     if not build0(): return -1
     if not submit0(): return -1

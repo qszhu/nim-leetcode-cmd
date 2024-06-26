@@ -129,6 +129,64 @@ method localTest*(self: Python3Project) =
   echo cmd
   if execShellCmd(cmd) != 0: return
 
+const LAUNCH_NAME = "nlcc debug"
+const LAUNCH_FN = ".vscode" / "launch.json"
+
+proc readLaunchConfig(): JsonNode =
+  if not fileExists(LAUNCH_FN):
+    createDir(LAUNCH_FN.parentDir)
+    writeFile(LAUNCH_FN, $(%*{
+      "configurations": @[]
+    }))
+  readFile(LAUNCH_FN).parseJson
+
+proc getDebugConfig(port: int, localRoot: string): JsonNode =
+  %*{
+    "name": LAUNCH_NAME,
+    "type": "debugpy",
+    "request": "attach",
+    "connect": %*{
+      "host": "localhost",
+      "port": port,
+    },
+    "pathMappings": @[%*{
+      "localRoot": localRoot,
+      "remoteRoot": "/usr/app/",
+    }]
+  }
+
+proc updateLaunchConfig(localDebugPort: int, localRoot: string) =
+  var launchConfig = readLaunchConfig()
+  let configs = launchConfig["configurations"].getElems
+    .filterIt(it["name"].getStr != LAUNCH_NAME)
+  launchConfig["configurations"] = %*(configs & getDebugConfig(localDebugPort, localRoot))
+  writeFile(LAUNCH_FN, $launchConfig)
+
+method debug*(self: Python3Project, port = 5678) =
+  checkCmd("docker")
+
+  updateLaunchConfig(port, self.buildDir.absolutePath)
+
+  let code = readFile(self.targetFn)
+  let driverLoop = genDriverLoop(self.info.metaData)
+  let tmpl = readFile(TMPL_DRIVER_FN)
+  let driverCode = tmpl
+    .replace(TMPL_VAR_CODE, code)
+    .replace(TMPL_VAR_DRIVER_LOOP, driverLoop)
+  let driverFn = self.buildDir / "driver.py"
+  writeFile(driverFn, driverCode)
+  writeFile(self.testMyOutputFn, "")
+
+  let cmd = @[&"docker run --rm",
+    &"-v {driverFn.absolutePath}:/usr/app/driver.py",
+    &"-v {self.testInputFn.absolutePath}:/usr/app/input",
+    &"-v {self.testMyOutputFn.absolutePath}:/usr/app/user.out",
+    &"-p {port}:5678",
+    &"lcpython3.11 sh -c \"python -Xfrozen_modules=off -m debugpy --wait-for-client --listen 0.0.0.0:5678 driver.py -recursion_limit 550000 < input\"",
+  ].join(" ")
+  echo cmd
+  if execShellCmd(cmd) != 0: return
+
 
 
 when isMainModule:
