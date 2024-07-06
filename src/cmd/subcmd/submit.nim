@@ -23,7 +23,8 @@ proc submitCmd*(proj: BaseProject): bool =
   if status != STATUS_ACCEPTED:
     let lastTestCase = res{"last_testcase"}.getStr
     if lastTestCase.len > 0:
-      proj.appendTestCase(lastTestCase)
+      let expectedOutput = res{"expected_output"}.getStr
+      proj.appendTestCase(lastTestCase, expectedOutput)
     return
 
   # Accepted

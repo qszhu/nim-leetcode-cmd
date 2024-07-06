@@ -98,9 +98,13 @@ method testOutputFn*(self: BaseProject): string {.base, inline.} =
 method testMyOutputFn*(self: BaseProject): string {.base, inline.} =
   self.testDir / "myoutput"
 
-method appendTestCase*(self: BaseProject, testCase: string) {.base, inline.} =
-  let data = @[readFile(self.testInputFn), testCase].join("\n")
-  writeFile(self.testInputFn, data)
+method appendTestCase*(self: BaseProject, testCase, expected: string) {.base, inline.} =
+  block:
+    let data = @[readFile(self.testInputFn).strip, testCase].join("\n")
+    writeFile(self.testInputFn, data)
+  block:
+    let data = @[readFile(self.testOutputFn).strip, expected].join("\n")
+    writeFile(self.testOutputFn, data)
 
 method getNextSolutionFn*(self: BaseProject): string {.base.} =
   let n = walkFiles(self.srcDir / &"solution*.{self.srcFileExt}").toSeq.len + 1

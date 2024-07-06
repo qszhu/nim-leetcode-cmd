@@ -124,7 +124,7 @@ method localTest*(self: Python3Project) =
     &"-v {driverFn.absolutePath}:/usr/app/driver.py",
     &"-v {self.testInputFn.absolutePath}:/usr/app/input",
     &"-v {self.testMyOutputFn.absolutePath}:/usr/app/user.out",
-    &"lcpython3.11 sh -c \"python driver.py -recursion_limit 550000 < input\"",
+    &"lcpython3.11 sh -c \"python driver.py -u -recursion_limit 550000 < input\"",
   ].join(" ")
   echo cmd
   if execShellCmd(cmd) != 0: return

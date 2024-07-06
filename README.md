@@ -126,10 +126,6 @@ $ ./build.sh
   * [ ] rust
 * [x] extract sample outputs from problem description
 * [ ] generate test cases according to problem description
-* test solutions locally
-  * [x] python
-    * [ ] debugger support
-  * [x] nimwasm
 * docker env
   * [x] python
   * [x] javascript
@@ -141,12 +137,17 @@ $ ./build.sh
 * [ ] realtime contest ratings
 * [ ] compatibility with old folder structure
   * [x] compatibility with old code template
-* [x] update self
-* [x] list problems and choose one
-* [x] open file and set cursor in code template
 * github actions
   * [x] build
   * [ ] release
+* custom data structures
+  * [ ] list
+  * [ ] tree
+  * [ ] n-ary tree
+  * [ ] graph
+  * [ ] design
+  * [ ] call function
+  * [ ] call method
 
 # Implementation details
 
