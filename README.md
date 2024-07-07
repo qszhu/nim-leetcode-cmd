@@ -37,18 +37,7 @@ If you have only one browser profile, just accept the default profile path. Othe
 # Commands
 
 ```bash
-$ nlcc start weekly-contest-400 # start a speicified contest, contest url is also accepted
-$ nlcc test # build and test solution for current question
-$ nlcc build # build solution for current question
-$ nlcc submit # build and submit solution for the current question
-              # if the solution is accepted, the next question would be opened
-$ nlcc next # open next question to solve
-$ nlcc list # list and choose question to solve
-$ nlcc select 3 # select the specified question in the contest to solve
-$ nlcc startIdx 4 # set the first question to solve in the contest
-$ nlcc lang # change language
-$ nlcc sync # sync cookies from browser (e.g. if the cookies expired and you need to login again)
-$ nlcc upgrade # updates self
+$ nlcc help
 ```
 
 # Code templates
@@ -148,6 +137,7 @@ $ ./build.sh
   * [ ] design
   * [ ] call function
   * [ ] call method
+  * [ ] modify args in-place (280.)
 
 # Implementation details
 

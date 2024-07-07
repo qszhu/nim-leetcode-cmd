@@ -11,6 +11,8 @@ const CMD_LIST* = "list"
 const CMD_UPGRADE* = "upgrade"
 const CMD_INIT* = "init"
 const CMD_DEBUG* = "debug"
+const CMD_VERSION* = "version"
+const CMD_HELP* = "help"
 
 const OPT_BROWSER* = "browser"
 const OPT_PROFILE* = "profile"

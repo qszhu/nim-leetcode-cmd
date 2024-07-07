@@ -19,7 +19,33 @@ import subcmd/[build, debug, start, submit, sync, test, upgrade]
 
 const SESSION_EXPIRE_WARNING_SECS = 7 * 24 * 60 * 60
 
-proc showHelp(): int = discard
+const VERSION = "0.7.2"
+
+proc showVersion() =
+  echo VERSION
+
+proc showHelp() =
+  echo """
+nlcc
+  start                           start current running contest or count down for upcoming contest
+    [contest slug]                start contest with contest slug (e.g. weekly-contest-400)
+    [contest url]                 start contest with contest url
+  test                            test current solution
+    [-l]                          test current solution locally
+  build                           build current solution
+  submit                          submit current solution
+  next                            open next question in the contest
+  list                            list questions in the contest and select one to open
+  select <n>                      select specified question in the contest to open
+  startIdx <n>                    set first question to open in a contest
+  lang                            change programming language to solve questions
+  sync                            sync sessions from browser
+    [-f]                          force sync sessions from a new browser
+  upgrade                         download the latest release
+  version                         show version
+  help                            show help
+"""
+
 proc initCurrentProject(): BaseProject
 proc openCurrent(): bool
 
@@ -227,10 +253,14 @@ proc main(): int =
     if not list0(): return -1
   of CMD_UPGRADE:
     if not upgrade0(): return -1
+  of CMD_START:
+    if not start0(): return -1
   # TODO: custom editor command
   # TODO: custom diff command
+  of CMD_VERSION:
+    showVersion()
   else:
-    if not start0(): return -1
+    showHelp()
 
 
 
