@@ -98,13 +98,16 @@ method testOutputFn*(self: BaseProject): string {.base, inline.} =
 method testMyOutputFn*(self: BaseProject): string {.base, inline.} =
   self.testDir / "myoutput"
 
-method appendTestCase*(self: BaseProject, testCase, expected: string) {.base, inline.} =
-  block:
-    let data = @[readFile(self.testInputFn).strip, testCase].join("\n")
-    writeFile(self.testInputFn, data)
-  block:
-    let data = @[readFile(self.testOutputFn).strip, expected].join("\n")
-    writeFile(self.testOutputFn, data)
+const HIDDEN = "Hidden for this testcase furing contest."
+
+method appendTestCase*(self: BaseProject, testCase, expected: string): bool {.base, inline.} =
+  if testCase.len == 0 or expected.len == 0: return
+  if expected.strip.startsWith(HIDDEN): return
+  let inputData = @[readFile(self.testInputFn).strip, testCase].join("\n")
+  writeFile(self.testInputFn, inputData)
+  let outputData = @[readFile(self.testOutputFn).strip, expected].join("\n")
+  writeFile(self.testOutputFn, outputData)
+  true
 
 method getNextSolutionFn*(self: BaseProject): string {.base.} =
   let n = walkFiles(self.srcDir / &"solution*.{self.srcFileExt}").toSeq.len + 1

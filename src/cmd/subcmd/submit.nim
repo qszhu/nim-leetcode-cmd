@@ -22,9 +22,10 @@ proc submitCmd*(proj: BaseProject): bool =
   # Wrong Answer, etc.
   if status != STATUS_ACCEPTED:
     let lastTestCase = res{"last_testcase"}.getStr
-    if lastTestCase.len > 0:
-      let expectedOutput = res{"expected_output"}.getStr
-      proj.appendTestCase(lastTestCase, expectedOutput)
+    let expectedOutput = res{"expected_output"}.getStr
+    if proj.appendTestCase(lastTestCase, expectedOutput):
+      proj.openInEditor(proj.testInputFn)
+      proj.openInEditor(proj.testOutputFn)
     return
 
   # Accepted
