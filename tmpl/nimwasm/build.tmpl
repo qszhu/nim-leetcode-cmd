@@ -8,16 +8,19 @@ nim c \
   --clang.exe:emcc \
   --clang.linkerexe:emcc \
   --noMain:on \
-  --passL:"-Os" \
   --passL:"-sSINGLE_FILE" \
   --passL:"-sWASM_ASYNC_COMPILATION=0" \
   --passL:"-sMODULARIZE" \
   --passL:"-sEXPORTED_FUNCTIONS=_solve,_malloc" \
   --passL:"-sEXPORTED_RUNTIME_METHODS=ccall,UTF8ToString" \
   --passL:"-sALLOW_MEMORY_GROWTH" \
+  --passL:"-sINITIAL_MEMORY=268500992" \
+  --passL:"-sSTACK_SIZE=268435456" \
   --passL:"--extern-post-js ${postFn}" \
   -o:${targetFn} \
   ${solutionFn}
+
+#  --passL:"-Os" \
 
 esbuild ${targetFn} \
   --target=node20.10.0 \

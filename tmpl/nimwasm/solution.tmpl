@@ -16,10 +16,13 @@ proc main(lines: cstring, sz: int): cstring {.exportc: "solve".} =
     reader = newReader(lines, sz)
     writer = newWriter()
 
-  while reader.hasNext:
+  try:
+    while reader.hasNext:
 ${readArgs}
-    solve()
-    writer.write res
+      solve()
+      writer.write res
+  except:
+    discard
 
   writer.toCString
 

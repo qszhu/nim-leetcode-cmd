@@ -71,7 +71,7 @@ proc getReadArgs(metaData: JsonNode): string =
     let name = param["name"].getStr
     let typ = param["type"].getStr
     res.add (&"""
-    {name} = reader.{getReadMethod(typ)}
+      {name} = reader.{getReadMethod(typ)}
 """).strip(leading = false)
 
   res.join("\n")

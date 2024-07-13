@@ -39,7 +39,7 @@ proc testCmd*(proj: BaseProject, local = false): bool =
 
   let res = proj.test(client)
 
-  showCodeOutput(res)
+  showStdOutput(res)
 
   # Runtime Error
   if showRuntimeError(res): return

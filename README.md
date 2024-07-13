@@ -129,6 +129,7 @@ $ ./build.sh
 * github actions
   * [x] build
   * [ ] release
+* [ ] split test cases
 * custom data structures
   * [ ] list
   * [ ] tree

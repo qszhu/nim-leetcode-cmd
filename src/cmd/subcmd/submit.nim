@@ -12,6 +12,7 @@ proc submitCmd*(proj: BaseProject): bool =
   client.setToken(nlccrc.getLeetCodeSession)
 
   let res = proj.submit(client)
+  showStdOutput(res)
 
   # Runtime Error
   if showRuntimeError(res): return
