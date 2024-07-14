@@ -22,6 +22,7 @@ proc getType(t: string): string {.inline.} =
   of "double": "float"
   of "character", "string": "string"
   of "boolean": "bool"
+  of "ListNode": "ListNode"
   else:
     if t.endsWith("[]"): "seq[" & t[0 ..< ^2].getType & "]"
     elif t.startsWith("list<") and t.endsWith(">"):
@@ -34,11 +35,12 @@ proc getDefaultVal(t: string): string {.inline.} =
   of "integer", "long", "double": "0"
   of "string": "\"\""
   of "boolean": "false"
+  of "ListNode": "nil"
   else:
     if t.endsWith("[]"): "@[]"
     elif t.startsWith("list<") and t.endsWith(">"): "@[]"
     else:
-      raise newException(ValueError, "Type not implemented: " & t)
+      raise newException(ValueError, "Default val for type not implemented: " & t)
 
 proc getReadMethod(t: string): string {.inline.} =
   case t
@@ -47,13 +49,14 @@ proc getReadMethod(t: string): string {.inline.} =
   of "double": "readDouble"
   of "character", "string": "readString"
   of "boolean": "readBool"
+  of "ListNode": "readListNode"
   else:
     if t.endsWith("[][]"): t[0 ..< ^4].getReadMethod & "s2D"
     elif t.endsWith("[]"): t[0 ..< ^2].getReadMethod & "s"
     elif t.startsWith("list<") and t.endsWith(">"):
       t[5 ..< ^1].getReadMethod & "s"
     else:
-      raise newException(ValueError, "Type not implemented: " & t)
+      raise newException(ValueError, "Read method for type not implemented: " & t)
 
 proc getArgDefs(metaData: JsonNode): string =
   var res = newSeq[string]()

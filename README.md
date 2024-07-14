@@ -131,7 +131,7 @@ $ ./build.sh
   * [ ] release
 * [ ] split test cases
 * custom data structures
-  * [ ] list
+  * [x] list
   * [ ] tree
   * [ ] n-ary tree
   * [ ] graph
