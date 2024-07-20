@@ -57,10 +57,10 @@ proc showRank*(rank: JsonNode) =
 proc getOutput*(jso: JsonNode): string {.inline.} =
   jso.getElems.mapIt(it.getStr).join("\n")
 
-proc showStdOutput*(jso: JsonNode) =
-  let output = jso["std_output"].getStr
+proc showCodeOutput*(jso: JsonNode) =
+  let output = getOutput(jso["code_output"])
   if output.len > 0:
-    echo "stdout:"
+    echo "Code output:"
     echo output
 
 type

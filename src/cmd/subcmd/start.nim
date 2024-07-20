@@ -156,7 +156,6 @@ proc startCmd*(contestSlug: string): bool =
     echo "Warning: not registered for " & contestInfo.title
     refreshEcho "Registering..."
     waitFor client.register(contestInfo.contestSlug)
-    sleep(1000)
     let info = waitFor client.contestInfo(contestSlug)
     let registered = info["registered"].getBool
     if not registered:
