@@ -27,6 +27,7 @@ const KEY_QUESTIONS = "questions"
 const KEY_QUESTION_TITLES = "question_titles"
 const KEY_CURRENT_QUESTION = "current_question"
 const KEY_START_INDEX = "start_index"
+const KEY_VERBOSE = "verbose"
 
 const DEFAULT_EDITOR_CMD = &"code -g {TMPL_VAR_SOLUTION_SRC}:1024"
 const DEFAULT_DIFF_CMD = &"code --diff {TMPL_VAR_DIFF_A} {TMPL_VAR_DIFF_B}"
@@ -118,5 +119,11 @@ proc setStartIndex*(self: NLCCRC, i: int) {.inline.} =
 
 proc getStartIndex*(self: NLCCRC, default = DEFAULT_START_IDX): int {.inline.} =
   self.get(KEY_START_INDEX, default = $default).parseInt
+
+proc setVerbose*(self: NLCCRC, v: bool) {.inline.} =
+  self.set(KEY_VERBOSE, if v: "1" else: "0")
+
+proc getVerbose*(self: NLCCRC): bool {.inline.} =
+  if self.get(KEY_VERBOSE, default = "0").parseInt == 1: true else: false
 
 let nlccrc* = initNLCCRC()

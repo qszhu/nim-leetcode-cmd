@@ -1,4 +1,5 @@
 import std/[
+  logging,
   sequtils,
   strformat,
   strutils,
@@ -42,6 +43,7 @@ nlcc
   sync                            sync sessions from browser
     [-f]                          force sync sessions from a new browser
   upgrade                         download the latest release
+  verbose <0|1>                   verbose mode
   version                         show version
   help                            show help
 """
@@ -176,6 +178,15 @@ proc lang0(): bool =
 proc upgrade0(): bool =
   upgradeCmd()
 
+proc verbose0(): bool =
+  let args = initArgs().parse
+  if args.getArg(1).len == 0 or args.getArg(1).parseInt != 0:
+    echo "verbose: true"
+    nlccrc.setVerbose(true)
+  else:
+    echo "verbose: false"
+    nlccrc.setVerbose(false)
+
 proc initCurrentProject(): BaseProject =
   let contestSlug = nlccrc.getCurrentContest
   let questionSlug = nlccrc.getContestQuestions[nlccrc.getCurrentQuestion]
@@ -202,6 +213,12 @@ proc openCurrent(): bool =
   true
 
 proc check(): bool =
+  let verbose = nlccrc.getVerbose
+  if verbose or defined(debug):
+    addHandler(newConsoleLogger(levelThreshold = lvlDebug))
+  else:
+    addHandler(newConsoleLogger(levelThreshold = lvlNotice))
+
   var session = nlccrc.getLeetCodeSession
   if session.len == 0:
     if not sync0(): return
@@ -257,6 +274,8 @@ proc main(): int =
     if not start0(): return -1
   # TODO: custom editor command
   # TODO: custom diff command
+  of CMD_VERBOSE:
+    if not verbose0(): return -1
   of CMD_VERSION:
     showVersion()
   else:
