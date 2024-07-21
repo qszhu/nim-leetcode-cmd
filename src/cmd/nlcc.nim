@@ -20,7 +20,7 @@ import subcmd/[build, debug, start, submit, sync, test, upgrade]
 
 const SESSION_EXPIRE_WARNING_SECS = 7 * 24 * 60 * 60
 
-const VERSION = "0.7.2"
+const VERSION = "0.8.2"
 
 proc showVersion() =
   echo VERSION

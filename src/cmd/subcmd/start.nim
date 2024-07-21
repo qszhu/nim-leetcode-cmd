@@ -129,6 +129,17 @@ proc initQuestionProj(client: LcClient,
   ))
   proj.initProjectDir
 
+proc isClassicMode(client: LcClient, contestSlug: string): Future[bool] {.async.} =
+  # always return true?
+  let res = await client.canSwitchToContestDynamicLayout(contestSlug)
+  res["data"]["contestDetail"]["enableContestDynamicLayout"].getBool
+
+proc setDynamicMode(client: LcClient, contestSlug: string, enabled: bool): Future[bool] {.async.} =
+  let res = await client.updateContestDynamicLayout(contestSlug, enabled)
+  result = res["data"]["toggleContestDynamicLayout"]["ok"].getBool
+  if not result:
+    echo $(res["data"]["toggleContestDynamicLayout"]["error"])
+
 proc startCmd*(contestSlug: string): bool =
   var contestSlug = contestSlug
 
@@ -145,6 +156,9 @@ proc startCmd*(contestSlug: string): bool =
 
     let nextContest = upcomingContests[0]
     contestSlug = nextContest.contestSlug
+
+  # prefer classic mode as it's more stable
+  discard waitFor client.setDynamicMode(contestSlug, false)
 
   var info = waitFor client.contestInfo(contestSlug)
 
