@@ -53,10 +53,10 @@ proc getReadMethod(t: string): string {.inline.} =
   else:
     if t.endsWith("[][]"): t[0 ..< ^4].getReadMethod & "s2D"
     elif t.endsWith("[]"): t[0 ..< ^2].getReadMethod & "s"
-    elif t.startsWith("list<") and t.endsWith(">"):
-      t[5 ..< ^1].getReadMethod & "s"
     elif t.startsWith("list<list<") and t.endsWith(">>"):
       t[10 ..< ^2].getReadMethod & "s2D"
+    elif t.startsWith("list<") and t.endsWith(">"):
+      t[5 ..< ^1].getReadMethod & "s"
     else:
       raise newException(ValueError, "Read method for type not implemented: " & t)
 
