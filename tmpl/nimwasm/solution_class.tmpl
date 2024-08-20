@@ -1,0 +1,42 @@
+# --profiler:on --stackTrace:on
+# --profiler:off --stackTrace:on -d:memProfiler
+when compileOption("profiler") or defined(memProfiler):
+  import nimprof
+
+import ../../../../../lib/nimwasm/types
+
+type
+  Class = ref object
+    # TODO: fields
+
+${constructor}
+${methods}
+
+proc main(lines: cstring, sz: int): cstring {.exportc: "solve".} =
+  let
+    reader = newReader(lines, sz)
+    writer = newWriter()
+
+  try:
+    while reader.hasNext:
+      let cWriter = newWriter()
+      var c: Class
+      let nameList = reader.readStrings
+      let paramsList = reader.readList
+      for i, name in nameList:
+        let params = paramsList[i].readList
+        case name
+${constructorCall}
+${methodCalls}
+        else:
+          raise newException(ValueError, "invalid method: " & name)
+      writer.writeRaw cWriter.toList
+  except:
+    discard
+
+  writer.toCString
+
+when isMainModule:
+  block:
+    let s = stdin.readAll
+    echo $(main(s.cstring, s.len))

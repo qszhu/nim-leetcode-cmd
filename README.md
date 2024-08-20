@@ -135,7 +135,7 @@ $ ./build.sh
   * [ ] tree
   * [ ] n-ary tree
   * [ ] graph
-  * [ ] design
+  * [x] design
   * [ ] call function
   * [ ] call method
   * [ ] modify args in-place (280.)
