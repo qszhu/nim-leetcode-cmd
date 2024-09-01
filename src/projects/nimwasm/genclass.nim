@@ -28,10 +28,10 @@ proc {classname}({params}): Class =
 
 proc genMethod(jso: JsonNode): string =
   let name = jso["name"].getStr
-  let params = jso["params"].getParams
+  let params = @["self: Class", jso["params"].getParams].join(",")
   let retType = jso["return"]["type"].getStr.getType
   &"""
-proc {name}(self: Class, {params}): {retType} =
+proc {name}({params}): {retType} =
   discard
   # TODO
 """

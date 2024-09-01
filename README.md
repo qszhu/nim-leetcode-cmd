@@ -131,14 +131,17 @@ $ ./build.sh
   * [ ] release
 * [ ] split test cases
 * custom data structures
-  * [x] list
-  * [ ] tree
+  * [ ] list (https://leetcode.cn/problems/remove-duplicate-node-lcci/)
+  * [x] tree (1586)
   * [ ] n-ary tree
   * [ ] graph
   * [x] design
   * [ ] call function
   * [ ] call method
   * [ ] modify args in-place (280.)
+  * [ ] nested integer (339)
+  * [x] employee (690)
+  * [ ] doubly linked list (3263)
 
 # Implementation details
 

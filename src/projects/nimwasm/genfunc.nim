@@ -15,6 +15,7 @@ proc getDefaultVal(t: string): string {.inline.} =
   of "string": "\"\""
   of "boolean": "false"
   of "ListNode": "nil"
+  of "TreeNode": "nil"
   else:
     if t.endsWith("[]"): "@[]"
     elif t.startsWith("list<") and t.endsWith(">"): "@[]"

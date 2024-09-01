@@ -20,6 +20,7 @@ proc getType*(t: string): string {.inline.} =
   of "character", "string": "string"
   of "boolean": "bool"
   of "ListNode": "ListNode"
+  of "TreeNode": "TreeNode"
   else:
     if t.endsWith("[]"): "seq[" & t[0 ..< ^2].getType & "]"
     elif t.startsWith("list<") and t.endsWith(">"):
@@ -35,6 +36,7 @@ proc getReadMethod*(t: string): string {.inline.} =
   of "character", "string": "readString"
   of "boolean": "readBool"
   of "ListNode": "readListNode"
+  of "TreeNode": "readTreeNode"
   else:
     if t.endsWith("[][]"): t[0 ..< ^4].getReadMethod & "s2D"
     elif t.endsWith("[]"): t[0 ..< ^2].getReadMethod & "s"
