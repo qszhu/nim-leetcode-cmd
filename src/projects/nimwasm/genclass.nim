@@ -28,7 +28,10 @@ proc {classname}({params}): Class =
 
 proc genMethod(jso: JsonNode): string =
   let name = jso["name"].getStr
-  let params = @["self: Class", jso["params"].getParams].join(",")
+  let paramStr = jso["params"].getParams
+  let params =
+    if paramStr.len == 0: "self: Class"
+    else: @["self: Class", paramStr].join(", ")
   let retType = jso["return"]["type"].getStr.getType
   &"""
 proc {name}({params}): {retType} =
@@ -58,7 +61,15 @@ proc genConstructorCall(metaData: JsonNode): string =
 proc genMethodCall(jso: JsonNode): string =
   let name = jso["name"].getStr
   let args = jso["params"].getReadArgs
-  &"""
+  let retType = jso["return"]["type"].getStr.getType
+  if retType == "void":
+    &"""
+        of "{name}":
+          c.{name}({args})
+          cWriter.writeRaw "null"
+"""
+  else:
+    &"""
         of "{name}":
           cWriter.write c.{name}({args})
 """

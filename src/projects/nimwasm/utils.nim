@@ -14,8 +14,11 @@ const TMPL_ROOT* = "tmpl" / "nimwasm"
 
 proc getType*(t: string): string {.inline.} =
   case t
+  of "void": "void"
   of "integer": "int"
-  of "long": "int64"
+  of "long":
+    echo "Warning: has long integer!"
+    "int64"
   of "double": "float"
   of "character", "string": "string"
   of "boolean": "bool"
