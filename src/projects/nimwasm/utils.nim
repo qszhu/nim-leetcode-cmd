@@ -35,7 +35,7 @@ proc getReadMethod*(t: string): string {.inline.} =
   case t
   of "integer": "readInt"
   of "long": "readLong"
-  of "double": "readDouble"
+  of "double": "readFloat"
   of "character", "string": "readString"
   of "boolean": "readBool"
   of "ListNode": "readListNode"

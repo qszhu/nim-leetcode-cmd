@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.8.6"
+version       = "0.8.7"
 author        = "Qinsi ZHU"
 description   = "Leetcode command line tool"
 license       = "MIT"
