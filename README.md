@@ -1,5 +1,11 @@
 [![build](https://github.com/qszhu/nim-leetcode-cmd/actions/workflows/build.yaml/badge.svg)](https://github.com/qszhu/nim-leetcode-cmd/actions/workflows/build.yaml)
 
+# Warning
+
+Experimental. USE AT YOUR OWN RISK.
+
+在正式比赛中使用的风险未知.
+
 # Getting started
 
 * Login in your preferred browser (Chrome/Edge/Firefox).
