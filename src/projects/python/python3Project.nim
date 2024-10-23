@@ -4,6 +4,8 @@ import std/[
   strutils,
 ]
 
+import pkg/nimleetcode
+
 import ../baseProject
 import ../utils
 import ../../consts
@@ -23,8 +25,8 @@ const TMPL_VAR_DRIVER_LOOP = "${driverLoop}"
 
 proc genCode(code, problemDesc, problemDescEn: string): string =
   # In python, use spaces for tabs
-  let problemDesc = problemDesc.replace("\t", "    ")
-  let problemDescEn = problemDescEn.replace("\t", "    ")
+  let problemDesc = problemDesc.replace("\t", "    ").html2text
+  let problemDescEn = problemDescEn.replace("\t", "    ").html2text
   let tmpl = readFile(TMPL_FN)
   result = tmpl
     .replace(TMPL_VAR_CODE, code)
