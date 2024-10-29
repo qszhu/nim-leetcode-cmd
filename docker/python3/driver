@@ -56,6 +56,7 @@ class Solution:
 
 
 import sys
+import time
 import os
 import orjson as json
 from precompiled.__deserializer__ import __DeserializerRapid__ as __Deserializer__
@@ -69,6 +70,8 @@ def _driver():
     f = open("user.out", "wb", 0)
     lines = __Utils__().read_lines()
 
+    ctime_total = 0
+
     while True:
         line = next(lines, None)
         if line == None:
@@ -80,7 +83,10 @@ def _driver():
             raise Exception("Testcase does not have enough input arguments. Expected argument 'target'")
         param_2 = des._deserialize(line, 'integer')
         
+        ctime_start = time.process_time_ns()
         ret = Solution().twoSum(param_1, param_2)
+        ctime_end = time.process_time_ns()
+        ctime_total += ctime_end - ctime_start
         try:
             out = ser._serialize(ret, 'integer[]')
         except:
@@ -88,6 +94,8 @@ def _driver():
         out = str.encode(out + '\n')
         f.write(out)
         sys.stdout.write(SEPARATOR)
+    with open("display_runtime.txt", "w") as runtime_f:
+        runtime_f.write(f"{ctime_total // 1000000}\n")
 
 
 if __name__ == '__main__':
